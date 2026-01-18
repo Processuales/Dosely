@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/models/medication.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/status_helpers.dart';
+import '../../core/localization/app_localizations.dart';
 
 /// Card showing a medication with status indicator
 class MedicationCard extends StatelessWidget {
@@ -23,6 +24,7 @@ class MedicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Material(
       color: AppTheme.surface,
       borderRadius: BorderRadius.circular(16),
@@ -117,7 +119,7 @@ class MedicationCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      _getStatusText(),
+                      _getStatusText(l10n),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: StatusHelpers.getStatusColor(status),
                         fontWeight: FontWeight.w700,
@@ -134,14 +136,14 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  String _getStatusText() {
+  String _getStatusText(AppLocalizations l10n) {
     switch (status) {
       case MedicationStatus.safe:
-        return 'SAFE';
+        return l10n.statusSafeBadge;
       case MedicationStatus.caution:
-        return 'CAUTION';
+        return l10n.statusCautionBadge;
       case MedicationStatus.conflict:
-        return 'CONFLICT';
+        return l10n.statusConflictBadge;
     }
   }
 }

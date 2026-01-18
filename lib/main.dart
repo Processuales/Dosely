@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'core/localization/app_localizations.dart';
 
@@ -14,9 +15,11 @@ import 'core/services/storage_service.dart';
 import 'core/providers/medication_provider.dart';
 import 'core/providers/profile_provider.dart';
 import 'core/providers/schedule_provider.dart';
+import 'core/providers/voice_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   final prefs = await SharedPreferences.getInstance();
   final storageService = StorageService(prefs);
 
@@ -33,6 +36,7 @@ void main() async {
         ChangeNotifierProvider(
           create: (_) => ScheduleProvider(storageService)..loadSchedule(),
         ),
+        ChangeNotifierProvider(create: (_) => VoiceProvider(prefs)),
       ],
       child: const DoselyApp(),
     ),
@@ -51,6 +55,7 @@ class DoselyApp extends StatelessWidget {
       theme: AppTheme.lightTheme(
         settings.textScaleFactor,
         colorblindMode: settings.colorblindMode,
+        isHighContrast: settings.isHighContrast,
       ),
       themeAnimationDuration: Duration.zero,
       themeAnimationCurve: Curves.linear,

@@ -145,151 +145,62 @@ class AppTheme {
   // THEME DATA
   // ===================
 
-  static ThemeData lightTheme(double textScale, {int colorblindMode = 0}) {
+  static ThemeData lightTheme(
+    double textScale, {
+    int colorblindMode = 0,
+    bool isHighContrast = false,
+  }) {
     // Default Colors
     Color primaryColor = primary;
-    // Color primaryDarkColor = primaryDark; // Unused
     Color primaryLightColor = primaryLight;
     Color errorColor = statusConflict;
     Color successColor = statusSafe;
+    Color backgroundColor = background;
+    Color surfaceColor = surface;
+    Color textColor = textMain;
 
-    // Adjust dependent on mode
-    // 1: Protanopia (Red-blind) -> Avoid red/green confusion. Blue/Yellow palette.
+    // Colorblind Adjustments header...
     if (colorblindMode == 1) {
-      primaryColor = const Color(0xFF0077CC); // Strong Blue
+      primaryColor = const Color(0xFF0077CC);
       primaryLightColor = const Color(0xFFD6EBFF);
-      errorColor = const Color(
-        0xFFD55E00,
-      ); // Vermilion/Orange (High contrast against blue)
-      successColor = const Color(0xFF009E73); // Bluish Green (Teal)
-    }
-    // 2: Deuteranopia (Green-blind) -> Similar to Protanopia, focus on Blue/Orange differentiation
-    else if (colorblindMode == 2) {
-      primaryColor = const Color(0xFF332288); // Indigo
+      errorColor = const Color(0xFFD55E00);
+      successColor = const Color(0xFF009E73);
+    } else if (colorblindMode == 2) {
+      primaryColor = const Color(0xFF332288);
       primaryLightColor = const Color(0xFFEBE6FF);
-      errorColor = const Color(0xFFD55E00); // Vermilion
-      successColor = const Color(0xFF44AA99); // Teal
-    }
-    // 3: Tritanopia (Blue-blind) -> Avoid blue/yellow. Red/Cyan/Pink palette.
-    else if (colorblindMode == 3) {
-      primaryColor = const Color(0xFFCC3311); // Reddish Orange (Primary)
+      errorColor = const Color(0xFFD55E00);
+      successColor = const Color(0xFF44AA99);
+    } else if (colorblindMode == 3) {
+      primaryColor = const Color(0xFFCC3311);
       primaryLightColor = const Color(0xFFFFEBE6);
-      errorColor = const Color(0xFFEE3377); // Magenta
-      successColor = const Color(0xFF009988); // Teal
+      errorColor = const Color(0xFFEE3377);
+      successColor = const Color(0xFF009988);
+    }
+
+    // High Contrast Overrides
+    if (isHighContrast) {
+      primaryColor = Colors.blue[900]!;
+      primaryLightColor = Colors.blue[50]!;
+      backgroundColor = Colors.white;
+      surfaceColor = Colors.white;
+      textColor = Colors.black;
+      // errorColor and successColor keep their distinctive hues but could be darkened if needed
     }
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-
-      // Colors
       colorScheme: ColorScheme.light(
         primary: primaryColor,
         onPrimary: Colors.white,
         primaryContainer: primaryLightColor,
         secondary: successColor,
         error: errorColor,
-        surface: surface,
-        onSurface: textMain,
+        surface: surfaceColor,
+        onSurface: textColor,
       ),
-
-      scaffoldBackgroundColor: background,
-
-      // AppBar
-      appBarTheme: AppBarTheme(
-        backgroundColor: surface,
-        foregroundColor: textMain,
-        elevation: 0,
-        centerTitle: true,
-        titleTextStyle: headlineMedium(textScale),
-        iconTheme: const IconThemeData(color: textMain, size: 24),
-      ),
-
-      // Elevated Buttons (Primary)
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          textStyle: buttonLarge(textScale),
-          minimumSize: const Size(double.infinity, 56),
-        ),
-      ),
-
-      // Outlined Buttons
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: textMain,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          side: const BorderSide(color: border, width: 2),
-          textStyle: buttonLarge(textScale),
-          minimumSize: const Size(double.infinity, 56),
-        ),
-      ),
-
-      // Text Buttons
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: primaryColor,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          textStyle: buttonMedium(textScale),
-        ),
-      ),
-
-      // Input Decoration
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: surfaceAlt,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: border, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: primaryColor, width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
-        hintStyle: bodyMedium(textScale).copyWith(color: textLight),
-      ),
-
-      // Bottom Navigation
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: surface,
-        selectedItemColor: primaryColor,
-        unselectedItemColor: textLight,
-        type: BottomNavigationBarType.fixed,
-        elevation: 8,
-        selectedLabelStyle: labelSmall(
-          textScale,
-        ).copyWith(fontWeight: FontWeight.w700),
-        unselectedLabelStyle: labelSmall(textScale),
-      ),
-
-      // Divider
-      dividerTheme: const DividerThemeData(
-        color: border,
-        thickness: 1,
-        space: 1,
-      ),
-
-      // Icon
-      iconTheme: const IconThemeData(color: textMain, size: 24),
-
-      // Text Theme
+      scaffoldBackgroundColor: backgroundColor,
+      // Apply scaled text styles via textTheme
       textTheme: TextTheme(
         displayLarge: displayLarge(textScale),
         displayMedium: displayMedium(textScale),
@@ -302,6 +213,126 @@ class AppTheme {
         labelLarge: labelLarge(textScale),
         labelMedium: labelMedium(textScale),
         labelSmall: labelSmall(textScale),
+        titleMedium: headlineMedium(textScale), // Alias for convenience
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: surfaceColor,
+        foregroundColor: textColor,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: headlineMedium(textScale).copyWith(color: textColor),
+        iconTheme: IconThemeData(color: textColor, size: 24),
+      ),
+      // Outlined button styled to match elevated
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: primaryColor,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          side: BorderSide(color: primaryColor, width: 2),
+          textStyle: buttonLarge(textScale),
+          minimumSize: const Size(double.infinity, 56),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          elevation: isHighContrast ? 4 : 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side:
+                isHighContrast
+                    ? const BorderSide(color: Colors.black, width: 2)
+                    : BorderSide.none,
+          ),
+          textStyle: buttonLarge(textScale),
+          minimumSize: const Size(double.infinity, 56),
+        ),
+      ),
+      // Global SnackBar theme - ensures auto-dismiss
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+      ),
+    );
+  }
+
+  static ThemeData darkTheme(
+    double textScale, {
+    int colorblindMode = 0,
+    bool isHighContrast = false,
+  }) {
+    // Default Dark Colors
+    Color primaryColor = const Color(0xFF60A5FA); // Lighter blue for dark mode
+    Color primaryLightColor = const Color(0xFF1E3A8A);
+    Color errorColor = const Color(0xFFF87171);
+    Color successColor = const Color(0xFF4ADE80);
+    Color backgroundColor = const Color(0xFF0F172A); // Dark Slate
+    Color surfaceColor = const Color(0xFF1E293B);
+    Color textColor = const Color(0xFFF8FAFC);
+
+    // Colorblind Adjustments (Shifted for dark mode visibility)
+    if (colorblindMode == 1) {
+      primaryColor = const Color(0xFF56B4E9); // Sky Blue
+      errorColor = const Color(0xFFE69F00); // Orange
+    } else if (colorblindMode == 2) {
+      primaryColor = const Color(0xFFCC79A7); // Reddish Purple
+      errorColor = const Color(0xFFE69F00);
+    } else if (colorblindMode == 3) {
+      primaryColor = const Color(0xFFFF7C43);
+      errorColor = const Color(0xFFFF4EA3); // Bright Pink
+    }
+
+    // High Contrast Overrides
+    if (isHighContrast) {
+      backgroundColor = Colors.black;
+      surfaceColor = Colors.black;
+      textColor = Colors.white;
+      primaryColor = Colors.cyanAccent; // Very bright against black
+      // specific high contrast logic
+    }
+
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.dark(
+        primary: primaryColor,
+        onPrimary: Colors.black, // Dark text on light primary in dark mode
+        primaryContainer: primaryLightColor,
+        secondary: successColor,
+        error: errorColor,
+        surface: surfaceColor,
+        onSurface: textColor,
+      ),
+      scaffoldBackgroundColor: backgroundColor,
+      appBarTheme: AppBarTheme(
+        backgroundColor: surfaceColor,
+        foregroundColor: textColor,
+        elevation: 0,
+        centerTitle: true,
+        titleTextStyle: headlineMedium(textScale).copyWith(color: textColor),
+        iconTheme: IconThemeData(color: textColor, size: 24),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.black,
+          elevation: isHighContrast ? 4 : 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side:
+                isHighContrast
+                    ? const BorderSide(color: Colors.white, width: 2)
+                    : BorderSide.none,
+          ),
+          textStyle: buttonLarge(textScale),
+          minimumSize: const Size(double.infinity, 56),
+        ),
       ),
     );
   }

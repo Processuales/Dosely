@@ -1,13 +1,30 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import '../config/ai_prompts.dart';
 
 class AIService {
-  static const String _apiKey =
-      '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';
-  static const String _modelName = 'google/gemini-3-flash-preview';
-  static const String _apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
+  static String get _apiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
+  static const String _modelName = 'gemini-2.5-flash';
+
+  late final GenerativeModel _model;
+
+  String _getLanguageName(String code) {
+    if (code == 'en') return 'English';
+    if (code == 'fr') return 'French';
+    if (code == 'es') return 'Spanish';
+    if (code == 'de') return 'German';
+    return code; // Fallback or assume it's already a name
+  }
+
+  AIService() {
+    _model = GenerativeModel(
+      model: _modelName,
+      apiKey: _apiKey,
+      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
+    );
+  }
 
   /// Analyzes a medication label image and returns structured data.
   Future<Map<String, dynamic>> analyzeMedicationLabel(
@@ -15,33 +32,37 @@ class AIService {
     Map<String, dynamic> userProfileJson,
     List<Map<String, dynamic>> currentMedications, {
     String languageCode = 'en',
+    String? userFrequency,
+    String? userInstructions,
+    bool simpleMode = false,
   }) async {
     try {
       if (imageBytes.isEmpty) return {};
 
-      final base64Image = base64Encode(imageBytes);
       final profileJsonString = jsonEncode(userProfileJson);
       final currentMedsJsonString = jsonEncode(currentMedications);
 
-      final prompt = AIPrompts.analyzeMedicationLabel(
+      // Determine target language name
+      final languageName = _getLanguageName(languageCode);
+
+      String prompt = AIPrompts.analyzeMedicationLabel(
         profileJsonString,
         currentMedsJsonString,
+        userFrequency: userFrequency,
+        userInstructions: userInstructions,
+        simpleMode: simpleMode,
       );
 
-      // Construct message with image
+      // Add language instruction
+      prompt +=
+          '\n\nIMPORTANT: Output all text fields (descriptions, warnings, etc.) in this language: $languageName';
+
       final content = [
-        {'type': 'text', 'text': prompt},
-        {
-          'type': 'image_url',
-          'image_url': {'url': 'data:image/jpeg;base64,$base64Image'},
-        },
+        Content.multi([TextPart(prompt), DataPart('image/jpeg', imageBytes)]),
       ];
 
-      final responseBody = await _sendOpenRouterRequest(content);
-      if (responseBody == null) return {};
-
-      final cleanJson = _cleanJsonString(responseBody);
-      return jsonDecode(cleanJson) as Map<String, dynamic>;
+      final response = await _model.generateContent(content);
+      return _parseJson(response.text);
     } catch (e) {
       // ignore: avoid_print
       print('AI Analysis Error: $e');
@@ -59,18 +80,12 @@ class AIService {
     }
 
     try {
-      final languageName = languageCode == 'fr' ? 'French' : 'English';
+      final languageName = _getLanguageName(languageCode);
       final prompt = AIPrompts.parseMedicalProfile(notes, languageName);
 
-      final responseBody = await _sendOpenRouterRequest([
-        {'type': 'text', 'text': prompt},
-      ]);
+      final response = await _model.generateContent([Content.text(prompt)]);
 
-      if (responseBody == null) return {'allergies': [], 'conditions': []};
-
-      // Extract JSON from response (OpenRouter/Gemini might wrap in backticks)
-      final cleanJson = _cleanJsonString(responseBody);
-      final Map<String, dynamic> jsonResponse = jsonDecode(cleanJson);
+      final jsonResponse = _parseJson(response.text);
 
       final allergies =
           (jsonResponse['allergies'] as List?)
@@ -92,86 +107,223 @@ class AIService {
     }
   }
 
-  /// Transcribes audio data to text using the AI model.
+  /// Transcribes audio data to text (Not fully supported by Flash 1.5 text-only, but multimodal might support audio?)
+  /// Note: Gemini 1.5 Flash supports audio input.
   Future<String?> transcribeMedicalNotes(
     Uint8List audioBytes, {
     String languageCode = 'en',
-    String audioFormat = 'aac',
   }) async {
+    // Note: Implementation depends on SDK specific support for audio parts.
+    // For now, we'll assume audio support via DataPart if supported, or text fallback.
+    // However, google_generative_ai doesn't explicitly support 'input_audio' MIME in DataPart freely without checking docs.
+    // Assuming standard usage:
     try {
-      if (audioBytes.isEmpty) {
-        return null;
-      }
-
-      final base64Audio = base64Encode(audioBytes);
-
-      final languageName = languageCode == 'fr' ? 'French' : 'English';
+      final languageName = _getLanguageName(languageCode);
       final prompt = AIPrompts.transcribeMedicalNotes(languageName);
 
-      final responseBody = await _sendOpenRouterRequest([
-        {'type': 'text', 'text': prompt},
-        {
-          'type': 'input_audio',
-          'input_audio': {'data': base64Audio, 'format': audioFormat},
-        },
-      ]);
+      final content = [
+        Content.multi([
+          TextPart(prompt),
+          DataPart('audio/mp3', audioBytes), // Assuming mp3/aac
+        ]),
+      ];
 
-      return responseBody?.trim();
+      final response = await _model.generateContent(content);
+      return response.text?.trim();
     } catch (e) {
-      // ignore: avoid_print
-      print('AI Transcription Error: $e');
+      print(
+        'Transcription not fully supported in this customized service yet: $e',
+      );
       return null;
     }
   }
 
-  /// Helper to send requests to OpenRouter
-  Future<String?> _sendOpenRouterRequest(
-    List<Map<String, dynamic>> content,
-  ) async {
+  /// Analyzes a medication text query and returns structured data.
+  Future<Map<String, dynamic>> analyzeMedicationText({
+    required String query,
+    required String userProfile,
+    required List<Map<String, dynamic>> currentMedications,
+    bool simpleMode = false,
+    String languageCode = 'en',
+  }) async {
     try {
-      final response = await http.post(
-        Uri.parse(_apiUrl),
-        headers: {
-          'Authorization': 'Bearer $_apiKey',
-          'HTTP-Referer':
-              'https://cleardose.app', // Optional, for OpenRouter rankings
-          'X-Title': 'Dosely', // Optional
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': _modelName,
-          'messages': [
-            {'role': 'user', 'content': content},
-          ],
-        }),
+      final String profileJson = userProfile.isEmpty ? "{}" : userProfile;
+      final String medsJson = jsonEncode(currentMedications);
+      final languageName = _getLanguageName(languageCode);
+
+      String prompt = AIPrompts.analyzeMedicationText(
+        query,
+        profileJson,
+        medsJson,
+        simpleMode: simpleMode,
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final content = data['choices']?[0]?['message']?['content'];
-        return content?.toString();
-      } else {
-        // ignore: avoid_print
-        print('OpenRouter Error: ${response.statusCode} - ${response.body}');
-        return null;
-      }
+      prompt +=
+          '\n\nIMPORTANT: Output all text fields in this language: $languageName';
+
+      final response = await _model.generateContent([Content.text(prompt)]);
+
+      return _parseJson(response.text);
     } catch (e) {
       // ignore: avoid_print
-      print('HTTP Error: $e');
+      print('Error analyzing medication text: $e');
+      throw Exception('Failed to analyze medication text');
+    }
+  }
+
+  /// Simplifies medication information
+  Future<Map<String, dynamic>> simplifyMedicationInfo({
+    required String shortDescription,
+    required String longDescription,
+    required List<String> commonSideEffects,
+    List<String>? userRisks,
+    String? statusReason,
+    String? conflictDescription,
+    String languageCode = 'en',
+  }) async {
+    final languageName = _getLanguageName(languageCode);
+
+    final prompt = '''
+You are explaining medication information to a 10-year-old child. 
+Make it simple, friendly, and reassuring. Avoid scary medical terms.
+Use short sentences and everyday words.
+Translate the Output to: $languageName
+
+ORIGINAL INFORMATION:
+Short Description: $shortDescription
+Long Description: $longDescription
+Side Effects: ${commonSideEffects.join(', ')}
+${userRisks != null && userRisks.isNotEmpty ? 'Personal Risks/Warnings: ${userRisks.join(', ')}' : ''}
+${statusReason != null ? 'Why Caution is Needed: $statusReason' : ''}
+${conflictDescription != null ? 'Conflict Warning: $conflictDescription' : ''}
+
+Return ONLY valid JSON with simplified versions:
+{
+  "shortDescriptionSimplified": "Simple 1-sentence explanation",
+  "longDescriptionSimplified": "Simple 2-3 sentence explanation",
+  "commonSideEffectsSimplified": ["simple effect 1", "simple effect 2"],
+  "userRisksSimplified": ["simple risk 1", "simple risk 2"],
+  "statusReasonSimplified": "Simple explanation of why to be careful (or null if not applicable)",
+  "conflictDescriptionSimplified": "Simple explanation of the conflict (or null if not applicable)"
+}
+''';
+
+    try {
+      final response = await _model.generateContent([Content.text(prompt)]);
+      return _parseJson(response.text);
+    } catch (e) {
+      print('Simplification Error: $e');
+      return {};
+    }
+  }
+
+  /// Translates the app's string map to a new language
+  Future<Map<String, String>> translateAppStrings(
+    Map<String, String> sourceStrings,
+    String targetLanguage,
+  ) async {
+    final prompt = '''
+Translate the following JSON map of UI strings to $targetLanguage.
+Keep the keys exactly the same. Only translate the values.
+Preserve any variables like \$days.
+Adapt the tone to be friendly and clear.
+
+SOURCE STRINGS:
+${jsonEncode(sourceStrings)}
+
+Return ONLY valid JSON.
+''';
+
+    try {
+      final response = await _model.generateContent([Content.text(prompt)]);
+      final result = _parseJson(response.text);
+      return Map<String, String>.from(result);
+    } catch (e) {
+      print('Translation Error: $e');
+      return {};
+    }
+  }
+
+  /// Translates a list of strings to target language
+  Future<List<String>> translateList(
+    List<String> items,
+    String targetLanguage,
+  ) async {
+    if (items.isEmpty) return [];
+
+    final prompt = '''
+Translate the following list of texts to $targetLanguage.
+Maintain the exact meaning.
+Return ONLY a JSON array of strings.
+
+SOURCE LIST:
+${jsonEncode(items)}
+''';
+
+    try {
+      final response = await _model.generateContent([Content.text(prompt)]);
+      final result = _parseJson(response.text);
+      if (result is List) {
+        return result.map((e) => e.toString()).toList();
+      }
+      return items;
+    } catch (e) {
+      print('List Translation Error: $e');
+      return items;
+    }
+  }
+
+  /// Summarizes page content into a friendly audio script for Read Aloud
+  Future<String?> summarizeForVoice(
+    String pageContent,
+    String languageCode,
+  ) async {
+    if (pageContent.trim().isEmpty) return null;
+
+    final languageName = _getLanguageName(languageCode);
+
+    final prompt = '''
+You are narrating a mobile app screen for a visually impaired user.
+Describe what's on the screen in a natural, conversational way - like you're guiding someone through it.
+Focus on the main content and interactive elements. Be concise (2-4 sentences max).
+
+Format like: "On this screen, you can see [main content]. There's a button to [action], and below that..."
+Do NOT say "Welcome to..." or introduce the app. Just describe what's visible.
+
+Output ONLY the narration text in $languageName. No JSON, no quotes, just plain text.
+
+SCREEN CONTENT:
+$pageContent
+''';
+
+    try {
+      // Use a simpler model config for plain text output
+      final model = GenerativeModel(model: _modelName, apiKey: _apiKey);
+
+      final response = await model.generateContent([Content.text(prompt)]);
+      return response.text?.trim();
+    } catch (e) {
+      print('Summarization Error: $e');
       return null;
     }
   }
 
-  String _cleanJsonString(String raw) {
-    String result = raw;
-    if (result.startsWith('```json')) {
-      result = result.substring(7);
-    } else if (result.startsWith('```')) {
-      result = result.substring(3);
+  dynamic _parseJson(String? text) {
+    if (text == null) return {};
+    String clean = text;
+    if (clean.startsWith('```json')) {
+      clean = clean.substring(7);
+    } else if (clean.startsWith('```')) {
+      clean = clean.substring(3);
     }
-    if (result.endsWith('```')) {
-      result = result.substring(0, result.length - 3);
+    if (clean.endsWith('```')) {
+      clean = clean.substring(0, clean.length - 3);
     }
-    return result.trim();
+    try {
+      return jsonDecode(clean.trim());
+    } catch (e) {
+      print("JSON Parse Error: $e\nOriginal text: $text");
+      return {};
+    }
   }
 }

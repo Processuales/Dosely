@@ -4,6 +4,7 @@ import '../../../core/localization/app_localizations.dart';
 import '../../../core/models/profile.dart';
 import '../../../core/providers/profile_provider.dart';
 import '../../widgets/edit_profile_dialog.dart';
+import '../../widgets/medical_profile_dialog.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../widgets/read_aloud_button.dart';
 
@@ -151,7 +152,7 @@ class ProfileScreen extends StatelessWidget {
                         context,
                         Icons.cake,
                         l10n.profileAge,
-                        profile.age > 0 ? profile.age.toString() : '-',
+                        profile.age > 0 ? profile.age.toString() : 'N/A',
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -206,7 +207,21 @@ class ProfileScreen extends StatelessWidget {
                   profile.allergies,
                   Colors.red,
                   l10n.profileEdit,
-                  emptyText: 'No allergies listed',
+                  onEditInteract: () async {
+                    final result = await showDialog<UserProfile>(
+                      context: context,
+                      builder:
+                          (context) =>
+                              MedicalProfileDialog(initialProfile: profile),
+                    );
+                    if (result != null && context.mounted) {
+                      context.read<ProfileProvider>().updateProfile(result);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Allergies updated')),
+                      );
+                    }
+                  },
+                  emptyText: l10n.profileNoAllergies,
                 ),
               ),
               const SizedBox(height: 12),
@@ -221,7 +236,21 @@ class ProfileScreen extends StatelessWidget {
                   profile.conditions,
                   AppTheme.primary,
                   l10n.profileEdit,
-                  emptyText: 'No conditions listed',
+                  onEditInteract: () async {
+                    final result = await showDialog<UserProfile>(
+                      context: context,
+                      builder:
+                          (context) =>
+                              MedicalProfileDialog(initialProfile: profile),
+                    );
+                    if (result != null && context.mounted) {
+                      context.read<ProfileProvider>().updateProfile(result);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Conditions updated')),
+                      );
+                    }
+                  },
+                  emptyText: l10n.profileNoConditions,
                 ),
               ),
 
@@ -328,6 +357,7 @@ class ProfileScreen extends StatelessWidget {
     List<String> items,
     Color color,
     String editText, {
+    VoidCallback? onEditInteract,
     String emptyText = 'None',
   }) {
     return Container(
@@ -358,7 +388,10 @@ class ProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(title, style: Theme.of(context).textTheme.labelLarge),
-                    TextButton(onPressed: () {}, child: Text(editText)),
+                    TextButton(
+                      onPressed: onEditInteract ?? () {},
+                      child: Text(editText),
+                    ),
                   ],
                 ),
                 if (items.isEmpty)

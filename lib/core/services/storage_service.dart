@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/medication.dart';
+import '../models/drug_info.dart';
 import '../models/profile.dart';
 import '../models/schedule_item.dart';
 
@@ -10,6 +11,7 @@ class StorageService {
   static const String _keyProfile = 'user_profile';
   static const String _keyMedications = 'medications';
   static const String _keySchedule = 'schedule';
+  static const String _keyDrugLibrary = 'drug_library';
 
   StorageService(this._prefs);
 
@@ -32,7 +34,7 @@ class StorageService {
     }
   }
 
-  // --- Medications ---
+  // --- Medications (User Prescriptions) ---
 
   Future<void> saveMedications(List<Medication> medications) async {
     final List<Map<String, dynamic>> jsonList =
@@ -48,6 +50,27 @@ class StorageService {
     try {
       final List<dynamic> jsonList = jsonDecode(data);
       return jsonList.map((json) => Medication.fromJson(json)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // --- Drug Library (Persistent Knowledge) ---
+
+  Future<void> saveDrugLibrary(List<DrugInfo> library) async {
+    final List<Map<String, dynamic>> jsonList =
+        library.map((m) => m.toJson()).toList();
+    await _prefs.setString(_keyDrugLibrary, jsonEncode(jsonList));
+  }
+
+  List<DrugInfo> loadDrugLibrary() {
+    final String? data = _prefs.getString(_keyDrugLibrary);
+    if (data == null) {
+      return [];
+    }
+    try {
+      final List<dynamic> jsonList = jsonDecode(data);
+      return jsonList.map((json) => DrugInfo.fromJson(json)).toList();
     } catch (e) {
       return [];
     }

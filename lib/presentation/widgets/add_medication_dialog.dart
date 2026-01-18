@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/models/medication.dart';
+import '../../core/models/drug_info.dart';
 
 class AddMedicationDialog extends StatefulWidget {
   const AddMedicationDialog({super.key});
@@ -81,17 +82,22 @@ class _AddMedicationDialogState extends State<AddMedicationDialog> {
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
+              final drugName = _nameController.text;
+
+              final drugInfo = DrugInfo(
+                id: drugName.toLowerCase().replaceAll(RegExp(r'\s+'), '_'),
+                name: drugName,
+                type: MedicationType.tablet, // Default
+              );
+
               final medication = Medication(
-                id:
-                    DateTime.now().millisecondsSinceEpoch
-                        .toString(), // Simple ID generation
-                name: _nameController.text,
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                drugInfo: drugInfo,
                 dosage: _dosageController.text,
                 frequency: _frequencyController.text,
                 instructions: _instructionsController.text,
                 status: MedicationStatus.safe, // Default to safe
                 dateScanned: DateTime.now(),
-                type: MedicationType.tablet, // Default
               );
               Navigator.of(context).pop(medication);
             }

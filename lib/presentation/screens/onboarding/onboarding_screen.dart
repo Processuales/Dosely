@@ -206,7 +206,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           final transcribedText = await _aiService.transcribeMedicalNotes(
             audioBytes,
             languageCode: languageCode,
-            audioFormat: 'wav',
           );
 
           if (mounted) {
@@ -456,6 +455,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ),
+            // Language Loading Overlay
+            if (context.watch<SettingsProvider>().isLanguageLoading)
+              Container(
+                color: Colors.black54,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Translating Application...',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        'Converting content...',
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -529,7 +552,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     dropdownColor: AppTheme.surface,
                     focusColor: Colors.transparent,
                     iconEnabledColor: AppTheme.primary,
-                    items: const [
+                    items: [
                       const DropdownMenuItem(
                         value: 'en',
                         child: Text('English'),
@@ -538,9 +561,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         value: 'fr',
                         child: Text('Français'),
                       ),
+                      if (context
+                                  .watch<SettingsProvider>()
+                                  .locale
+                                  .languageCode ==
+                              'x' &&
+                          context
+                                  .watch<SettingsProvider>()
+                                  .customLanguageName !=
+                              null)
+                        DropdownMenuItem(
+                          value: 'x',
+                          child: Text(
+                            context
+                                .watch<SettingsProvider>()
+                                .customLanguageName!,
+                          ),
+                        ),
+                      const DropdownMenuItem(
+                        value: 'add_custom',
+                        child: Row(
+                          children: [
+                            Icon(Icons.add, size: 18),
+                            SizedBox(width: 8),
+                            Text('Add Language'),
+                          ],
+                        ),
+                      ),
                     ],
                     onChanged: (val) {
-                      if (val != null && (val == 'en' || val == 'fr')) {
+                      if (val == 'add_custom') {
+                        _showAddLanguageDialog(
+                          context,
+                          context.read<SettingsProvider>(),
+                        );
+                      } else if (val != null) {
                         context.read<SettingsProvider>().setLocale(Locale(val));
                       }
                     },
@@ -670,12 +725,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Color Accessibility',
+            l10n.onboardingColorTitle,
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 8),
           Text(
-            'Adjust colors for better visibility.',
+            l10n.onboardingColorSubtitle,
             style: Theme.of(
               context,
             ).textTheme.bodyLarge?.copyWith(color: AppTheme.textSub),
@@ -708,9 +763,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            'Primary',
+                            l10n.onboardingColorPrimary,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -727,9 +782,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           color: Theme.of(context).colorScheme.error,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            'Error',
+                            l10n.onboardingColorError,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -746,9 +801,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           color: Theme.of(context).colorScheme.secondary,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            'Success',
+                            l10n.onboardingColorSuccess,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -950,9 +1005,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 8),
           Column(
             children: [
-              _buildRadioOption('Female', 'Female'),
-              _buildRadioOption('Male', 'Male'),
-              _buildRadioOption('Other', 'Other'),
+              _buildRadioOption(l10n.genderFemale, 'Female'),
+              _buildRadioOption(l10n.genderMale, 'Male'),
+              _buildRadioOption(l10n.genderOther, 'Other'),
             ],
           ),
 
@@ -1155,7 +1210,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
-                          'Tap the mic to record your notes by voice.',
+                          l10n.onboardingMicHint,
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AppTheme.textSub, fontSize: 10),
                         ),
@@ -1167,6 +1222,51 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAddLanguageDialog(BuildContext context, SettingsProvider settings) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Add Language'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Enter the language you want to translate the app into.',
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    hintText: 'e.g. German, Spanish, Japanese',
+                    border: OutlineInputBorder(),
+                  ),
+                  autofocus: true,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final lang = controller.text.trim();
+                  if (lang.isNotEmpty) {
+                    Navigator.pop(context); // Close dialog
+                    settings.addCustomLanguage(lang);
+                  }
+                },
+                child: const Text('Translate'),
+              ),
+            ],
+          ),
     );
   }
 }

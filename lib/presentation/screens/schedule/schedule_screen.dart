@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import '../../../core/localization/app_localizations.dart';
 import '../../../core/models/schedule_item.dart';
 import '../../../core/providers/schedule_provider.dart';
@@ -7,8 +8,85 @@ import '../../../core/theme/app_theme.dart';
 import '../../widgets/read_aloud_button.dart';
 
 /// Schedule/Plan screen - shows medication schedule and conflict alerts
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
+
+  @override
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen> {
+  Timer? _timer;
+  DateTime _currentTime = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    // Update every minute
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentTime = DateTime.now();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  /// Get the next upcoming time slot based on current time
+  TimeSlot? _getNextTimeSlot() {
+    final hour = _currentTime.hour;
+
+    // Morning: 6-11, Midday: 11-16, Evening: 16-21, Night: 21-6
+    if (hour >= 6 && hour < 11) {
+      return TimeSlot.midday; // Next is midday
+    } else if (hour >= 11 && hour < 16) {
+      return TimeSlot.evening; // Next is evening
+    } else if (hour >= 16 && hour < 21) {
+      return TimeSlot.night; // Next is night
+    } else {
+      return TimeSlot.morning; // Next is morning (wraps around)
+    }
+  }
+
+  /// Get approximate minutes until next time slot
+  int _getMinutesUntilNext() {
+    final hour = _currentTime.hour;
+    final minute = _currentTime.minute;
+
+    int targetHour;
+    if (hour >= 6 && hour < 11) {
+      targetHour = 11; // Midday starts at 11
+    } else if (hour >= 11 && hour < 16) {
+      targetHour = 16; // Evening starts at 16
+    } else if (hour >= 16 && hour < 21) {
+      targetHour = 21; // Night starts at 21
+    } else if (hour >= 21) {
+      targetHour = 30; // Morning at 6 (next day = 24 + 6 = 30)
+    } else {
+      targetHour = 6; // Morning starts at 6
+    }
+
+    final minutesUntil = ((targetHour - hour) * 60) - minute;
+    return minutesUntil > 0 ? minutesUntil : 0;
+  }
+
+  String _formatMinutes(int minutes) {
+    if (minutes >= 60) {
+      final hours = minutes ~/ 60;
+      final mins = minutes % 60;
+      if (mins > 0) {
+        return '$hours hr $mins min';
+      }
+      return '$hours hr';
+    }
+    return '$minutes min';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +103,27 @@ class ScheduleScreen extends StatelessWidget {
         scheduleItems.where((i) => i.timeSlot == TimeSlot.evening).toList();
     final nightItems =
         scheduleItems.where((i) => i.timeSlot == TimeSlot.night).toList();
+
+    // Find next upcoming slot with medications
+    final nextSlot = _getNextTimeSlot();
+    final minutesUntil = _getMinutesUntilNext();
+
+    // Check if next slot has medications
+    bool hasNextMedication = false;
+    String nextSlotName = '';
+    if (nextSlot == TimeSlot.morning && morningItems.isNotEmpty) {
+      hasNextMedication = true;
+      nextSlotName = l10n.scheduleMorning;
+    } else if (nextSlot == TimeSlot.midday && middayItems.isNotEmpty) {
+      hasNextMedication = true;
+      nextSlotName = l10n.scheduleMidday;
+    } else if (nextSlot == TimeSlot.evening && eveningItems.isNotEmpty) {
+      hasNextMedication = true;
+      nextSlotName = l10n.scheduleEvening;
+    } else if (nextSlot == TimeSlot.night && nightItems.isNotEmpty) {
+      hasNextMedication = true;
+      nextSlotName = l10n.scheduleNight;
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -60,16 +159,82 @@ class ScheduleScreen extends StatelessWidget {
                 ),
               ),
 
+              // Next Medication Timer Card
+              if (scheduleItems.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppTheme.primary, AppTheme.primaryDark],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.primary.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.timer,
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              hasNextMedication
+                                  ? l10n.scheduleNextInDetail(
+                                    _formatMinutes(minutesUntil),
+                                  )
+                                  : l10n.scheduleNoUpcoming,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (hasNextMedication)
+                              Text(
+                                nextSlotName,
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
               // Title Section
-              const SizedBox(height: 24), // Added padding
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       l10n.scheduleTitle,
                       style: Theme.of(context).textTheme.displayMedium,
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -77,17 +242,13 @@ class ScheduleScreen extends StatelessWidget {
                       style: Theme.of(
                         context,
                       ).textTheme.bodyLarge?.copyWith(color: AppTheme.textSub),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 24),
-
-              /* 
-              // Removed Demo Medication Card and Conflict Alert as per request to remove examples
-              // Keeping them commented out if needed for future reference or reference implementation
-              */
 
               // Daily Schedule Section
               Padding(
@@ -153,7 +314,7 @@ class ScheduleScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Text(
-                      'Your schedule is empty',
+                      l10n.scheduleEmpty,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppTheme.textSub,
                         fontStyle: FontStyle.italic,
@@ -161,32 +322,6 @@ class ScheduleScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-              const SizedBox(height: 24),
-
-              // Add Another Medication Button
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Not implemented yet')),
-                    );
-                  },
-                  icon: const Icon(Icons.add_circle),
-                  label: Text(l10n.scheduleAddAnother),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppTheme.textSub,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    side: BorderSide(
-                      color: AppTheme.primary.withValues(alpha: 0.3),
-                      width: 2,
-                    ),
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 100), // Bottom padding
             ],
@@ -260,60 +395,82 @@ class ScheduleScreen extends StatelessWidget {
     ScheduleItem item,
     AppLocalizations l10n,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceAlt,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.border),
+    return Dismissible(
+      key: Key(item.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 16),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () {
-              context.read<ScheduleProvider>().toggleTaken(item.id);
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: item.isTaken ? AppTheme.primary : AppTheme.textSub,
-                  width: 2,
-                ),
-                color: item.isTaken ? AppTheme.primary : null,
-              ),
-              child:
-                  item.isTaken
-                      ? const Icon(Icons.check, size: 16, color: Colors.white)
-                      : null,
-            ),
+      onDismissed: (direction) {
+        context.read<ScheduleProvider>().removeItem(item.id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.scheduleRemovedItem(item.medicationName)),
+            duration: const Duration(seconds: 3),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.medicationName,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    decoration:
-                        item.isTaken ? TextDecoration.lineThrough : null,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceAlt,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppTheme.border),
+        ),
+        child: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                context.read<ScheduleProvider>().toggleTaken(item.id);
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: item.isTaken ? AppTheme.primary : AppTheme.textSub,
+                    width: 2,
                   ),
+                  color: item.isTaken ? AppTheme.primary : null,
                 ),
-                Text(
-                  item.instructions,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: AppTheme.textSub),
-                ),
-              ],
+                child:
+                    item.isTaken
+                        ? const Icon(Icons.check, size: 16, color: Colors.white)
+                        : null,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.medicationName,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      decoration:
+                          item.isTaken ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                  Text(
+                    item.instructions,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: AppTheme.textSub),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

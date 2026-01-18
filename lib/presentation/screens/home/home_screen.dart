@@ -8,10 +8,10 @@ import '../../widgets/primary_action_card.dart';
 import '../../widgets/secondary_action_button.dart';
 import '../../widgets/medication_card.dart';
 import '../../../core/models/medication.dart';
-import '../../widgets/add_medication_dialog.dart';
 import '../../../core/services/camera_service.dart';
 import '../scan/scan_loading_screen.dart';
 import '../side_effects/medication_information_screen.dart';
+import '../../../core/theme/app_theme.dart';
 
 /// Home screen - main entry point after onboarding
 class HomeScreen extends StatelessWidget {
@@ -86,12 +86,22 @@ class HomeScreen extends StatelessWidget {
                         fileToUse = XFile(savedPath);
                       }
 
+                      // Ask for prescription details
+                      Map<String, String?>? details;
                       if (context.mounted) {
+                        details = await _showPrescriptionDetailsDialog(context);
+                      }
+
+                      if (context.mounted && details != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
-                                (_) => ScanLoadingScreen(imageFile: fileToUse),
+                                (_) => ScanLoadingScreen(
+                                  imageFile: fileToUse,
+                                  userFrequency: details?['frequency'],
+                                  userInstructions: details?['instructions'],
+                                ),
                           ),
                         );
                       }
@@ -107,42 +117,20 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SecondaryActionButton(
-                        icon: Icons.qr_code_scanner,
-                        label: l10n.homeScanIngredients,
+                        icon: Icons.search,
+                        label: l10n.homeSearchWithAI,
                         onTap: () async {
-                          final camera = CameraService();
-                          final file = await camera.takePicture();
-                          if (file != null && context.mounted) {
-                            final savedPath = await camera.saveImage(file);
-                            if (savedPath != null && context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Ingredients saved: $savedPath',
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: SecondaryActionButton(
-                        icon: Icons.keyboard,
-                        label: l10n.homeAddManually,
-                        onTap: () async {
-                          final result = await showDialog<Medication>(
-                            context: context,
-                            builder: (context) => const AddMedicationDialog(),
-                          );
-                          if (result != null && context.mounted) {
-                            context.read<MedicationProvider>().addMedication(
-                              result,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Medication added')),
+                          final query = await _showSearchDialog(context);
+                          if (query != null &&
+                              query.isNotEmpty &&
+                              context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) =>
+                                        ScanLoadingScreen(searchQuery: query),
+                              ),
                             );
                           }
                         },
@@ -188,7 +176,7 @@ class HomeScreen extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              "No recent scans",
+                              l10n.homeNoRecentScans,
                               style: Theme.of(
                                 context,
                               ).textTheme.bodyLarge?.copyWith(
@@ -237,6 +225,122 @@ class HomeScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) => MedicationInformationScreen(medication: medication),
       ),
+    );
+  }
+
+  Future<Map<String, String?>?> _showPrescriptionDetailsDialog(
+    BuildContext context,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final frequencyController = TextEditingController();
+    final instructionsController = TextEditingController();
+
+    return showDialog<Map<String, String?>>(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (context) => AlertDialog(
+            title: Text(
+              l10n.dialogPrescriptionDetails,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.dialogPrescriptionQuestion,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: frequencyController,
+                  decoration: InputDecoration(
+                    labelText: l10n.dialogFrequency,
+                    hintText: 'e.g. Daily, Twice a day',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: instructionsController,
+                  decoration: InputDecoration(
+                    labelText: l10n.dialogInstructions,
+                    hintText: 'e.g. With food',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.dialogAutoDetectHint,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: AppTheme.statusCaution,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, {
+                    'frequency':
+                        frequencyController.text.isEmpty
+                            ? null
+                            : frequencyController.text,
+                    'instructions':
+                        instructionsController.text.isEmpty
+                            ? null
+                            : instructionsController.text,
+                  });
+                },
+                child: Text(l10n.dialogContinue),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Future<String?> _showSearchDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final controller = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(
+              l10n.dialogSearchMedication,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.dialogSearchHint,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    labelText: l10n.dialogSearchMedication,
+                    hintText: 'e.g. Small blue pill for headache',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 2,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l10n.dialogCancel),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, controller.text),
+                child: Text(l10n.dialogSearch),
+              ),
+            ],
+          ),
     );
   }
 }

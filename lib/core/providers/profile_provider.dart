@@ -39,4 +39,34 @@ class ProfileProvider extends ChangeNotifier {
       debugPrint('Error saving profile: $e');
     }
   }
+
+  Future<void> translateProfileData(
+    Future<List<String>> Function(List<String>) translator,
+  ) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      bool changed = false;
+      if (_profile.allergies.isNotEmpty) {
+        final translatedAllergies = await translator(_profile.allergies);
+        _profile = _profile.copyWith(allergies: translatedAllergies);
+        changed = true;
+      }
+      if (_profile.conditions.isNotEmpty) {
+        final translatedConditions = await translator(_profile.conditions);
+        _profile = _profile.copyWith(conditions: translatedConditions);
+        changed = true;
+      }
+
+      if (changed) {
+        await _saveProfile();
+      }
+    } catch (e) {
+      debugPrint('Error translating profile: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

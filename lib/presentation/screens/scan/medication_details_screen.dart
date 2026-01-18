@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/providers/medication_provider.dart';
+import '../../../core/providers/settings_provider.dart';
 import '../../../core/models/medication.dart';
+import '../../../core/models/drug_info.dart';
 import '../../widgets/read_aloud_button.dart';
+
+import '../../../core/localization/app_localizations.dart';
 
 class MedicationDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> scanData;
-  final XFile imageFile;
+  final XFile? imageFile;
 
   const MedicationDetailsScreen({
     super.key,
     required this.scanData,
-    required this.imageFile,
+    this.imageFile,
   });
 
   @override
@@ -24,13 +28,45 @@ class MedicationDetailsScreen extends StatelessWidget {
     final instructions = scanData['instructions'] ?? '';
     final typeStr = scanData['type'] ?? 'tablet';
     final isEstimated = scanData['isEstimatedDosage'] == true;
+    final isEstimatedFreq = scanData['isEstimatedFrequency'] == true;
     final userRisks = (scanData['userRisks'] as List?)?.cast<String>() ?? [];
     final conflictDesc = scanData['conflictDescription'];
+    final statusReason = scanData['statusReason'];
     final shortDesc = scanData['shortDescription'];
     final longDesc = scanData['longDescription'];
     final commonSideEffects =
         (scanData['commonSideEffects'] as List?)?.cast<String>() ?? [];
+
+    // Simplified fields
+    final shortDescSimple = scanData['shortDescriptionSimplified'];
+    final longDescSimple = scanData['longDescriptionSimplified'];
+    final commonSideEffectsSimple =
+        (scanData['commonSideEffectsSimplified'] as List?)?.cast<String>();
+    final statusReasonSimple = scanData['statusReasonSimplified'];
+    final conflictDescSimple = scanData['conflictDescriptionSimplified'];
     final statusStr = scanData['status'] ?? 'safe';
+
+    // Get Settings
+    final settings = context.watch<SettingsProvider>();
+    final isSimpleMode = settings.simpleMode;
+    final l10n = AppLocalizations.of(context)!;
+
+    // Determine display values
+    final displayShortDesc =
+        isSimpleMode && shortDescSimple != null ? shortDescSimple : shortDesc;
+
+    final displayLongDesc =
+        isSimpleMode && longDescSimple != null ? longDescSimple : longDesc;
+
+    final displayStatusReason =
+        isSimpleMode && statusReasonSimple != null
+            ? statusReasonSimple
+            : statusReason;
+
+    final displayConflictDesc =
+        isSimpleMode && conflictDescSimple != null
+            ? conflictDescSimple
+            : conflictDesc;
 
     // Map status string to enum
     final status = MedicationStatus.values.firstWhere(
@@ -46,7 +82,7 @@ class MedicationDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Result'),
+        title: Text(l10n.scanResultTitle),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed:
@@ -108,9 +144,9 @@ class MedicationDetailsScreen extends StatelessWidget {
                           ),
                           if (isEstimated) ...[
                             const SizedBox(width: 8),
-                            const Text(
-                              '(Estimated)',
-                              style: TextStyle(
+                            Text(
+                              l10n.scanEstimated,
+                              style: const TextStyle(
                                 color: Colors.orange,
                                 fontSize: 12,
                               ),
@@ -124,9 +160,12 @@ class MedicationDetailsScreen extends StatelessWidget {
               ],
             ),
 
-            if (shortDesc != null) ...[
+            if (displayShortDesc != null) ...[
               const SizedBox(height: 16),
-              Text(shortDesc, style: Theme.of(context).textTheme.bodyLarge),
+              Text(
+                displayShortDesc,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ],
 
             const SizedBox(height: 24),
@@ -154,7 +193,7 @@ class MedicationDetailsScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Risks & Conflicts',
+                          l10n.scanRisksConflicts,
                           style: TextStyle(
                             color: Colors.red.shade900,
                             fontWeight: FontWeight.bold,
@@ -163,10 +202,17 @@ class MedicationDetailsScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (conflictDesc != null) ...[
+                    if (displayStatusReason != null) ...[
                       const SizedBox(height: 8),
                       Text(
-                        conflictDesc,
+                        displayStatusReason,
+                        style: TextStyle(color: Colors.red.shade900),
+                      ),
+                    ],
+                    if (displayConflictDesc != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        displayConflictDesc,
                         style: TextStyle(color: Colors.red.shade900),
                       ),
                     ],
@@ -200,22 +246,31 @@ class MedicationDetailsScreen extends StatelessWidget {
             ],
 
             // Details Section
-            Text('Details', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              l10n.scanDetails,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 12),
-            _buildDetailRow('Frequency', frequency),
             _buildDetailRow(
-              'Instructions',
+              l10n,
+              l10n.dialogFrequency,
+              frequency,
+              isEstimated: isEstimatedFreq,
+            ),
+            _buildDetailRow(
+              l10n,
+              l10n.dialogInstructions,
               instructions.isEmpty ? 'See label' : instructions,
             ),
-            if (longDesc != null) ...[
+            if (displayLongDesc != null) ...[
               const SizedBox(height: 12),
               Text(
-                'About this medication',
+                l10n.scanAbout,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 4),
               Text(
-                longDesc,
+                displayLongDesc,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
@@ -232,32 +287,47 @@ class MedicationDetailsScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 // Add to My Meds
+
+                // Create DrugInfo first
+                final drugInfo = DrugInfo(
+                  id: name.toLowerCase().replaceAll(RegExp(r'\s+'), '_'),
+                  name: name,
+                  type: type,
+                  shortDescription: shortDesc,
+                  longDescription: longDesc,
+                  conflictDescription: conflictDesc,
+                  statusReason: statusReason,
+                  commonSideEffects: commonSideEffects,
+                  shortDescriptionSimplified: shortDescSimple,
+                  longDescriptionSimplified:
+                      longDescSimple, // Ensure simple texts are saved
+                  commonSideEffectsSimplified: commonSideEffectsSimple,
+                  statusReasonSimplified: statusReasonSimple,
+                  conflictDescriptionSimplified: conflictDescSimple,
+                );
+
                 final newMedication = Medication(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  name: name,
+                  drugInfo: drugInfo,
                   dosage: dosage,
                   frequency: frequency,
                   instructions: instructions,
                   status: status,
                   dateScanned: DateTime.now(),
-                  type: type,
-                  shortDescription: shortDesc,
-                  longDescription: longDesc,
                   userRisks: userRisks,
-                  conflictDescription: conflictDesc,
                   isEstimatedDosage: isEstimated,
-                  commonSideEffects: commonSideEffects,
+                  isEstimatedFrequency: isEstimatedFreq, // Pass new field
                 );
 
                 context.read<MedicationProvider>().addMedication(newMedication);
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Added to My Meds')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l10n.scanAddedToMeds)));
 
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
-              child: const Text('Add to My Meds'),
+              child: Text(l10n.scanAddToMeds),
             ),
           ),
         ),
@@ -265,7 +335,12 @@ class MedicationDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildDetailRow(
+    AppLocalizations l10n,
+    String label,
+    String value, {
+    bool isEstimated = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -282,9 +357,31 @@ class MedicationDetailsScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: isEstimated ? Colors.orange[800] : null,
+                    ),
+                  ),
+                ),
+                if (isEstimated) ...[
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.warning_amber,
+                    size: 16,
+                    color: Colors.orange,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    l10n.scanEstimated,
+                    style: const TextStyle(color: Colors.orange, fontSize: 12),
+                  ),
+                ],
+              ],
             ),
           ),
         ],

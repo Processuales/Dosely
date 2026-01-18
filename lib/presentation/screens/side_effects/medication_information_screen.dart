@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/localization/app_localizations.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/models/medication.dart';
+import '../../../core/providers/settings_provider.dart';
 import '../../widgets/read_aloud_button.dart';
 
 /// Screen showing medication information and side effects
@@ -23,6 +25,19 @@ class _MedicationInformationScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final m = widget.medication;
+    final settings = context.watch<SettingsProvider>();
+    final isSimpleMode = settings.simpleMode;
+
+    // Choose simplified or original content based on mode
+    final displayDescription =
+        isSimpleMode && m.shortDescriptionSimplified != null
+            ? m.shortDescriptionSimplified!
+            : m.shortDescription;
+
+    final displaySideEffects =
+        isSimpleMode && m.commonSideEffectsSimplified != null
+            ? m.commonSideEffectsSimplified!
+            : m.commonSideEffects;
 
     return Scaffold(
       body: SafeArea(
@@ -72,9 +87,9 @@ class _MedicationInformationScreenState
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   const SizedBox(height: 8),
-                  if (m.shortDescription != null)
+                  if (displayDescription != null)
                     Text(
-                      m.shortDescription!,
+                      displayDescription,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   const SizedBox(height: 8),
@@ -105,6 +120,83 @@ class _MedicationInformationScreenState
               ),
             ),
 
+            // Status Explanation Box (if not safe)
+            if (m.status != MedicationStatus.safe)
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color:
+                      m.status == MedicationStatus.conflict
+                          ? AppTheme.statusConflictBg
+                          : AppTheme.statusCautionBg,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color:
+                        m.status == MedicationStatus.conflict
+                            ? AppTheme.statusConflict
+                            : AppTheme.statusCaution,
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      m.status == MedicationStatus.conflict
+                          ? Icons.dangerous
+                          : Icons.warning_amber,
+                      color:
+                          m.status == MedicationStatus.conflict
+                              ? AppTheme.statusConflict
+                              : AppTheme.statusCaution,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            m.status == MedicationStatus.conflict
+                                ? 'Major Conflict Detected'
+                                : 'Use With Caution',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleSmall?.copyWith(
+                              color:
+                                  m.status == MedicationStatus.conflict
+                                      ? AppTheme.statusConflict
+                                      : AppTheme.statusCaution,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            (isSimpleMode && m.statusReasonSimplified != null
+                                    ? m.statusReasonSimplified
+                                    : m.statusReason) ??
+                                (isSimpleMode &&
+                                        m.conflictDescriptionSimplified != null
+                                    ? m.conflictDescriptionSimplified
+                                    : m.conflictDescription) ??
+                                'Please consult your healthcare provider.',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(
+                              color:
+                                  m.status == MedicationStatus.conflict
+                                      ? AppTheme.statusConflict
+                                      : AppTheme.statusCaution,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             // Tab Bar
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -129,7 +221,7 @@ class _MedicationInformationScreenState
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildTabContent(l10n),
+                child: _buildTabContent(l10n, displaySideEffects),
               ),
             ),
           ],
@@ -138,7 +230,10 @@ class _MedicationInformationScreenState
     );
   }
 
-  Widget _buildTabContent(AppLocalizations l10n) {
+  Widget _buildTabContent(
+    AppLocalizations l10n,
+    List<String> displaySideEffects,
+  ) {
     switch (_selectedTab) {
       case 0: // Common
         return Column(
@@ -159,10 +254,10 @@ class _MedicationInformationScreenState
               ],
             ),
             const SizedBox(height: 16),
-            if (widget.medication.commonSideEffects.isEmpty)
+            if (displaySideEffects.isEmpty)
               const Text('No common side effects listed.')
             else
-              ...widget.medication.commonSideEffects.map(
+              ...displaySideEffects.map(
                 (e) => Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: _buildSideEffectCard(

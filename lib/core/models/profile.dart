@@ -35,6 +35,30 @@ class UserProfile {
     );
   }
 
+  UserProfile copyWith({
+    String? name,
+    String? pronouns,
+    int? age,
+    String? sex,
+    bool? isPregnant,
+    List<String>? allergies,
+    List<String>? conditions,
+    String? medicalNotes,
+    DateTime? memberSince,
+  }) {
+    return UserProfile(
+      name: name ?? this.name,
+      pronouns: pronouns ?? this.pronouns,
+      age: age ?? this.age,
+      sex: sex ?? this.sex,
+      isPregnant: isPregnant ?? this.isPregnant,
+      allergies: allergies ?? this.allergies,
+      conditions: conditions ?? this.conditions,
+      medicalNotes: medicalNotes ?? this.medicalNotes,
+      memberSince: memberSince ?? this.memberSince,
+    );
+  }
+
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       name: json['name'] as String,
