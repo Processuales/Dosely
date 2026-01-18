@@ -1,144 +1,166 @@
-# 💊 Dosely - Hackathon Flutter App
+# 💊 Dosely
 
-> Turn any medication label into a safe, conflict-checked schedule with accessibility-first guidance, in seconds.
+> **An accessibility-first mobile app that turns confusing medication labels into clear, personalized, and spoken dosing plans to help people take their medicine safely.**
+
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=google&logoColor=white)
+
+---
+
+## 🎯 What is Dosely?
+
+Dosely is a **hackathon project** designed to help people understand their medications safely. Simply scan a medication label or search by name, and Dosely will:
+
+- ✅ **Extract & Verify** medication info using OCR + Gumloop web search
+- ✅ **Analyze for Conflicts** with your existing medications and health profile
+- ✅ **Generate Personalized Guidance** based on your allergies & conditions
+- ✅ **Read Everything Aloud** with AI-powered voice synthesis
+- ✅ **Translate to Any Language** on-the-fly with AI
+
+---
+
+## ✨ Key Features
+
+### 🔍 Smart Scanning Pipeline
+1. **OCR** - Extracts text from medication labels
+2. **Gumloop Verification** - Double-checks via Google search
+3. **AI Analysis** - Deep research on drug interactions, side effects, and personalized risks
+
+### 🗣️ Accessibility First
+- **Text-to-Speech** with ElevenLabs (choice of 3 voices)
+- **Adjustable Text Size** (Normal, Large, Extra Large)
+- **Colorblind Modes** (Deuteranopia, Protanopia, Tritanopia)
+- **Simple Mode** - "Explain Like I'm 12" for easy understanding
+
+### 🌍 Universal Language Support
+- Built-in English & French
+- **Any Language** - Type "German", "Japanese", etc. and the entire app translates via AI
+
+### 📋 Medication Management
+- Drug interaction detection (Safe / Caution / Conflict)
+- Daily schedule with "Next Dose" countdown
+- Personalized risk warnings based on your profile
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| **Flutter** | Cross-platform mobile UI |
+| **Google Gemini 2.5 Flash** | AI analysis, OCR, translation |
+| **ElevenLabs API** | Text-to-speech synthesis |
+| **Gumloop** | Web search verification pipeline |
+| **Provider** | State management |
+| **SharedPreferences** | Local data persistence |
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Flutter SDK 3.7+ installed ([flutter.dev](https://flutter.dev/docs/get-started/install))
+- Flutter SDK 3.7+
 - Android Studio or VS Code with Flutter extensions
-- A physical Android device or emulator
 
 ### Setup
 
-1. **Install dependencies:**
+1. **Clone and install:**
    ```bash
+   git clone https://github.com/Processuales/Dosely.git
+   cd Dosely
    flutter pub get
    ```
 
-2. **Generate localization files:**
+2. **Add your API keys:**
    ```bash
-   flutter gen-l10n
+   cp .env.example .env
+   # Edit .env with your API keys:
+   # - GEMINI_API_KEY
+   # - ELEVENLABS_API_KEY  
+   # - GUMLOOP_API_KEY
    ```
 
-3. **Run the app (debug mode):**
+3. **Run the app:**
    ```bash
    flutter run
    ```
 
-4. **Build APK for testing:**
-   ```bash
-   flutter build apk --debug
-   ```
-   The APK will be at: `build/app/outputs/flutter-apk/app-debug.apk`
-
-5. **Build release APK:**
+4. **Build APK:**
    ```bash
    flutter build apk --release
    ```
-   The APK will be at: `build/app/outputs/flutter-apk/app-release.apk`
+   Output: `build/app/outputs/flutter-apk/app-release.apk`
 
-## 📱 App Structure
+---
+
+## 📱 Screenshots
+
+| Home | Scan Result | Schedule |
+|------|-------------|----------|
+| Scan button & recent meds | AI-analyzed medication info | Daily dosing plan |
+
+| Profile | Settings | Read Aloud |
+|---------|----------|------------|
+| Allergies & conditions | Text size & voice selection | TTS voice options |
+
+---
+
+## 📂 Project Structure
 
 ```
 lib/
-├── main.dart                          # App entry point
 ├── core/
-│   ├── theme/
-│   │   └── app_theme.dart            # Design system (colors, typography)
-│   └── providers/
-│       └── settings_provider.dart    # State management for settings
-├── l10n/
-│   └── app_en.arb                    # English strings (add app_fr.arb for French!)
+│   ├── config/ai_prompts.dart    # AI prompt templates
+│   ├── models/                    # Data models
+│   ├── providers/                 # State management
+│   ├── services/
+│   │   ├── ai_service.dart       # Gemini API integration
+│   │   ├── voice_service.dart    # ElevenLabs TTS
+│   │   └── gumloop_service.dart  # Web verification
+│   └── theme/app_theme.dart      # Design system
+├── l10n/                         # Localizations
 └── presentation/
-    ├── screens/
-    │   ├── main_shell.dart           # Bottom navigation shell
-    │   ├── onboarding/               # First-time user flow
-    │   ├── home/                     # Home screen with scan button
-    │   ├── medications/              # Medication list
-    │   ├── profile/                  # User profile
-    │   ├── settings/                 # App settings
-    │   ├── schedule/                 # Medication schedule (demo results)
-    │   └── side_effects/             # Side effects info
-    └── widgets/
-        ├── dosely_header.dart        # App header with logo
-        ├── primary_action_card.dart  # Big action buttons
-        ├── secondary_action_button.dart
-        └── medication_card.dart      # Medication list items
+    ├── screens/                  # All app screens
+    └── widgets/                  # Reusable components
 ```
 
-## 🌍 Adding New Languages
+---
 
-1. Create a new ARB file: `lib/l10n/app_fr.arb` (for French)
-2. Copy content from `app_en.arb` and translate
-3. Uncomment the locale in `lib/main.dart`:
-   ```dart
-   supportedLocales: const [
-     Locale('en'),
-     Locale('fr'), // Uncomment this
-   ],
-   ```
-4. Run `flutter gen-l10n`
+## 🔐 Environment Variables
 
-## ✨ Features Implemented
+Create a `.env` file in the project root:
 
-### Navigation
-- ✅ Bottom navigation with 4 tabs (Home, My Meds, Profile, Settings)
-- ✅ Screen routing between all pages
-- ✅ Back navigation
+```env
+GEMINI_API_KEY=your_gemini_api_key
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
+GUMLOOP_API_KEY=your_gumloop_api_key
+```
 
-### Screens
-- ✅ **Onboarding** - Text size selection, disclaimer, name input
-- ✅ **Home** - Scan button, recent scans, demo button
-- ✅ **Medications** - List of saved meds with status badges
-- ✅ **Profile** - User info, allergies, conditions
-- ✅ **Settings** - Text size, voice speed, simple mode
-- ✅ **Schedule** - Demo medication with conflict alert, daily timeline
-- ✅ **Side Effects** - Tabbed view with common effects
-
-### Accessibility
-- ✅ Dynamic text scaling (Normal/Large/Extra Large)
-- ✅ High contrast colors (WCAG AA compliant)
-- ✅ Large touch targets (44x44px minimum)
-- ✅ All text from localization (ready for TTS)
-
-### AI & Scanning
-- ✅ **Camera Integration** - Capture medication labels directly.
-- ✅ **AI Analysis** - Gemini-powered verification of medication details.
-- ✅ **Conflict Detection** - Checks new scans against your existing profile and medications.
-- ✅ **Text-to-Speech** - "Read Aloud" functionality for accessibility.
-
-## 🔧 Planned Features (Hackathon Scope)
-
-- ⏳ Gumloop Integration (Automation flow)
-- ❌ Persistent storage (currently in-memory)
-- ❌ Offline Mode
+---
 
 ## 🎨 Design System
 
-## 🎨 Design System
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Primary | `#137FEC` | Buttons, accents |
+| Safe | `#15803D` | No conflicts |
+| Caution | `#B45309` | Minor warnings |
+| Conflict | `#BE123C` | Drug interactions |
 
-Colors defined in `lib/core/theme/app_theme.dart`:
-- **Primary:** `#137FEC` (Dosely Blue)
-- **Safe:** `#15803D` (Green)
-- **Caution:** `#B45309` (Amber)
-- **Conflict:** `#BE123C` (Red)
+**Typography:** Lexend (Google Fonts)
 
-Font: **Lexend** (from Google Fonts, auto-downloaded)
+---
 
-## 📦 Dependencies
+## 👥 Team
 
-```yaml
-dependencies:
-  flutter_localizations: sdk     # Multi-language support
-  google_fonts: ^6.2.1          # Lexend typography
-  provider: ^6.1.2              # State management
-  shared_preferences: ^2.3.3    # Local storage (future)
-```
+Built with ❤️ for the **24-hour hackathon**
 
-## 👥 Team Dosely
+---
 
-Built for the 24-hour hackathon!
+## 📄 License
+
+This project was created for educational and demonstration purposes during a hackathon.
 
 ---
 
