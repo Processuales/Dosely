@@ -143,6 +143,12 @@ class MedicationProvider extends ChangeNotifier {
     await _saveMedications();
   }
 
+  /// Clears all medications (used for "Clear Scan History")
+  Future<void> clearAll() async {
+    _medications.clear();
+    await _saveMedications();
+  }
+
   /// Helper to find existing drug info if any
   DrugInfo? getDrugInfo(String id) {
     return _drugLibrary[id];
@@ -232,6 +238,103 @@ class MedicationProvider extends ChangeNotifier {
         }
       } catch (e) {
         debugPrint('Error simplifying ${drug.name}: $e');
+      }
+    }
+
+    if (anyUpdated) {
+      await _saveDrugLibrary();
+
+      // Update medications to use new drug info
+      for (int i = 0; i < _medications.length; i++) {
+        final med = _medications[i];
+        if (_drugLibrary.containsKey(med.drugInfo.id)) {
+          _medications[i] = Medication(
+            id: med.id,
+            drugInfo: _drugLibrary[med.drugInfo.id]!,
+            dosage: med.dosage,
+            frequency: med.frequency,
+            instructions: med.instructions,
+            status: med.status,
+            dateScanned: med.dateScanned,
+            userRisks: med.userRisks,
+            isEstimatedDosage: med.isEstimatedDosage,
+            isEstimatedFrequency: med.isEstimatedFrequency,
+          );
+        }
+      }
+      await _saveMedications();
+      notifyListeners();
+    }
+
+    return anyUpdated;
+  }
+
+  /// Translates all medication info to the target language
+  Future<bool> translateAllMedications(
+    Future<List<String>> Function(List<String>, String) translateFunction,
+    String targetLanguage,
+  ) async {
+    if (_drugLibrary.isEmpty) return false;
+
+    bool anyUpdated = false;
+
+    for (final drugId in _drugLibrary.keys) {
+      final drug = _drugLibrary[drugId]!;
+      try {
+        // Collect all translatable strings
+        final textsToTranslate = <String>[
+          drug.name,
+          drug.shortDescription ?? '',
+          drug.longDescription ?? '',
+          ...drug.commonSideEffects,
+        ];
+
+        // Translate
+        final translated = await translateFunction(
+          textsToTranslate.where((s) => s.isNotEmpty).toList(),
+          targetLanguage,
+        );
+
+        if (translated.isNotEmpty) {
+          int idx = 0;
+          final translatedName =
+              idx < translated.length ? translated[idx++] : drug.name;
+          final translatedShort =
+              drug.shortDescription != null && idx < translated.length
+                  ? translated[idx++]
+                  : drug.shortDescription;
+          final translatedLong =
+              drug.longDescription != null && idx < translated.length
+                  ? translated[idx++]
+                  : drug.longDescription;
+          final translatedSideEffects = <String>[];
+          for (
+            var i = 0;
+            i < drug.commonSideEffects.length && idx < translated.length;
+            i++
+          ) {
+            translatedSideEffects.add(translated[idx++]);
+          }
+
+          _drugLibrary[drugId] = DrugInfo(
+            id: drug.id,
+            name: translatedName,
+            type: drug.type,
+            shortDescription: translatedShort,
+            longDescription: translatedLong,
+            conflictDescription: drug.conflictDescription,
+            commonSideEffects:
+                translatedSideEffects.isNotEmpty
+                    ? translatedSideEffects
+                    : drug.commonSideEffects,
+            defaultDosage: drug.defaultDosage,
+            lastKnownFrequency: drug.lastKnownFrequency,
+            lastKnownInstructions: drug.lastKnownInstructions,
+          );
+          anyUpdated = true;
+        }
+      } catch (e) {
+        debugPrint('Error translating ${drug.name}: $e');
       }
     }
 

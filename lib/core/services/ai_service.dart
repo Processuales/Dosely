@@ -26,6 +26,40 @@ class AIService {
     );
   }
 
+  /// Step 1: Extract text from medication label image (OCR)
+  /// Returns raw extracted text for verification
+  Future<String?> extractTextFromImage(Uint8List imageBytes) async {
+    try {
+      if (imageBytes.isEmpty) return null;
+
+      const prompt = '''
+Extract ALL text visible on this medication label. Include:
+- Medication name
+- Dosage information
+- Instructions
+- Warnings
+- Active ingredients
+- Any other visible text
+
+Output the extracted text as a plain text string, preserving the layout roughly.
+Do not add any analysis or commentary - just extract the text.
+''';
+
+      final content = [
+        Content.multi([TextPart(prompt), DataPart('image/jpeg', imageBytes)]),
+      ];
+
+      // Use a non-JSON model for plain text extraction
+      final ocrModel = GenerativeModel(model: _modelName, apiKey: _apiKey);
+
+      final response = await ocrModel.generateContent(content);
+      return response.text;
+    } catch (e) {
+      print('OCR Error: $e');
+      return null;
+    }
+  }
+
   /// Analyzes a medication label image and returns structured data.
   Future<Map<String, dynamic>> analyzeMedicationLabel(
     Uint8List imageBytes,
@@ -143,6 +177,8 @@ class AIService {
     required String query,
     required String userProfile,
     required List<Map<String, dynamic>> currentMedications,
+    String? userFrequency,
+    String? userInstructions,
     bool simpleMode = false,
     String languageCode = 'en',
   }) async {

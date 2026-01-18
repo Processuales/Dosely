@@ -67,9 +67,18 @@ class _MedicationInformationScreenState
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: ReadAloudButton(),
+                    child: ReadAloudButton(
+                      pageContent: '''
+Medication: ${m.name}
+Description: ${displayDescription ?? 'No description'}
+Frequency: ${m.frequency}
+Instructions: ${m.instructions}
+Side Effects: ${displaySideEffects.join(', ')}
+Status: ${m.status.name}
+''',
+                    ),
                   ),
                 ],
               ),
@@ -210,7 +219,6 @@ class _MedicationInformationScreenState
                 children: [
                   _buildTabButton(0, l10n.sideEffectsCommon),
                   _buildTabButton(1, l10n.sideEffectsSerious),
-                  _buildTabButton(2, l10n.sideEffectsHelp),
                 ],
               ),
             ),
@@ -342,44 +350,6 @@ class _MedicationInformationScreenState
                 isSerious: true,
               ),
 
-            _buildSourceLink(context),
-            const SizedBox(height: 32),
-          ],
-        );
-
-      case 2: // Help
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Get Professional Advice',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'If you are concerned about any side effects, contact your healthcare provider.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.call),
-              label: Text(l10n.sideEffectsCallPharmacist),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 56),
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.emergency),
-              label: Text(l10n.sideEffectsEmergency),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.statusConflict,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 56),
-              ),
-            ),
             _buildSourceLink(context),
             const SizedBox(height: 32),
           ],

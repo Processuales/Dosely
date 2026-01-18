@@ -28,7 +28,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  final int _totalPages = 6;
+  final int _totalPages = 7;
   bool _isAnalyzing = false; // Loading state for AI
 
   // Page 1: Language (Managed by SettingsProvider)
@@ -366,6 +366,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       setState(() => _currentPage = index);
                     },
                     children: [
+                      _buildIntroPage(context, l10n),
                       _buildWelcomePage(context, l10n),
                       _buildTextSizePage(context, l10n),
                       _buildColorblindPage(context, l10n),
@@ -481,6 +482,61 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Page 0: Intro - What is Dosely
+  Widget _buildIntroPage(BuildContext context, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Logo
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: const Center(
+              child: Text(
+                'D',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 72,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 48),
+          Text(
+            'Dosely',
+            style: Theme.of(
+              context,
+            ).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Dosely is an accessibility-first mobile app that turns confusing medication labels into clear, personalized, and spoken dosing plans to help people take their medicine safely.',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: AppTheme.textSub,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

@@ -188,4 +188,10 @@ class ScheduleProvider extends ChangeNotifier {
     _schedule.removeWhere((item) => item.medicationId == medicationId);
     await _saveSchedule();
   }
+
+  /// Clears all schedule items
+  Future<void> clearAll() async {
+    _schedule.clear();
+    await _saveSchedule();
+  }
 }

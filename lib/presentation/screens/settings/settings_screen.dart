@@ -8,7 +8,9 @@ import '../../../core/providers/settings_provider.dart';
 import '../../../core/providers/medication_provider.dart';
 import '../../../core/providers/profile_provider.dart';
 import '../../../core/providers/voice_provider.dart';
+import '../../../core/providers/schedule_provider.dart';
 import '../../../core/services/ai_service.dart';
+import 'info_pages.dart';
 
 /// Settings screen - language, text size, voice, and app info
 class SettingsScreen extends StatefulWidget {
@@ -172,8 +174,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               value: 'fr',
                               child: Text('Français'),
                             ),
-                            if (settings.locale.languageCode == 'x' &&
-                                settings.customLanguageName != null)
+                            // Show custom language if one has been translated
+                            if (settings.customLanguageName != null)
                               DropdownMenuItem(
                                 value: 'x',
                                 child: Text(settings.customLanguageName!),
@@ -456,8 +458,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: OutlinedButton.icon(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.settingsHistoryCleared)),
+                        showDialog(
+                          context: context,
+                          builder:
+                              (ctx) => AlertDialog(
+                                title: const Text('Clear All Data?'),
+                                content: const Text(
+                                  'This will remove all your scanned medications. This action cannot be undone.',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    child: Text(l10n.dialogCancel),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      context
+                                          .read<MedicationProvider>()
+                                          .clearAll();
+                                      context
+                                          .read<ScheduleProvider>()
+                                          .clearAll();
+                                      Navigator.pop(ctx);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            l10n.settingsHistoryCleared,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppTheme.statusConflict,
+                                    ),
+                                    child: const Text('Clear'),
+                                  ),
+                                ],
+                              ),
                         );
                       },
                       icon: const Icon(Icons.delete_outline),
@@ -476,16 +515,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     context,
                     Icons.info_outline,
                     l10n.settingsAbout,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AboutPage()),
+                    ),
                   ),
                   _buildInfoLink(
                     context,
                     Icons.description_outlined,
                     l10n.settingsDisclaimer,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DisclaimerPage()),
+                    ),
                   ),
                   _buildInfoLink(
                     context,
                     Icons.lock_outline,
                     l10n.settingsPrivacy,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PrivacyPage()),
+                    ),
                   ),
 
                   const SizedBox(height: 100), // Bottom padding for nav bar
@@ -566,9 +617,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       lang,
                       onLanguageAdded: (addedLang) async {
                         final profileProvider = context.read<ProfileProvider>();
+                        final medProvider = context.read<MedicationProvider>();
                         final aiService = AIService();
+
+                        // Translate profile data
                         await profileProvider.translateProfileData(
                           (list) => aiService.translateList(list, addedLang),
+                        );
+
+                        // Translate medications
+                        await medProvider.translateAllMedications(
+                          aiService.translateList,
+                          addedLang,
                         );
                       },
                     );
@@ -675,13 +735,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildInfoLink(BuildContext context, IconData icon, String title) {
+  Widget _buildInfoLink(
+    BuildContext context,
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
     return InkWell(
-      onTap: () {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('$title coming soon!')));
-      },
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

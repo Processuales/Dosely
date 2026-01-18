@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/services/ai_service.dart';
+import '../../../core/services/gumloop_service.dart';
 import '../../../core/providers/profile_provider.dart';
 import '../../../core/providers/medication_provider.dart';
 import '../../../core/providers/settings_provider.dart';
@@ -31,6 +32,7 @@ class ScanLoadingScreen extends StatefulWidget {
 
 class _ScanLoadingScreenState extends State<ScanLoadingScreen> {
   final _aiService = AIService();
+  final _gumloopService = GumloopService();
   String _statusMessage = 'Analyzing Medicine...';
 
   @override
@@ -74,22 +76,84 @@ class _ScanLoadingScreenState extends State<ScanLoadingScreen> {
       Map<String, dynamic> result;
 
       if (widget.imageFile != null) {
-        // Image Analysis
+        // Step 1: OCR - Extract text from image
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Step 1/3: Reading label (OCR)...';
+          });
+        }
+
         final bytes = await widget.imageFile!.readAsBytes();
-        result = await _aiService.analyzeMedicationLabel(
-          bytes,
-          profile.toJson(),
-          medications.map((m) => m.toJson()).toList(),
+        final extractedText = await _aiService.extractTextFromImage(bytes);
+
+        if (extractedText == null || extractedText.isEmpty) {
+          throw Exception('Could not read medication label');
+        }
+
+        // Step 2: Gumloop verification (web search to verify)
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Step 2/3: Verifying via Gumloop...';
+          });
+        }
+
+        String verifiedText = extractedText;
+        try {
+          final gumloopResult = await _gumloopService.verifyMedicationData(
+            extractedText,
+          );
+          if (gumloopResult != null && gumloopResult.isNotEmpty) {
+            verifiedText = gumloopResult;
+          }
+        } catch (e) {
+          // If Gumloop fails, continue with original text
+          debugPrint('Gumloop verification skipped: $e');
+        }
+
+        // Step 3: Deep Analysis with verified text
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Step 3/3: Analyzing medication...';
+          });
+        }
+
+        result = await _aiService.analyzeMedicationText(
+          query: verifiedText,
+          userProfile: jsonEncode(profile.toJson()),
+          currentMedications: medications.map((m) => m.toJson()).toList(),
           userFrequency: widget.userFrequency,
           userInstructions: widget.userInstructions,
-
           simpleMode: isSimpleMode,
           languageCode: languageCode,
         );
       } else if (widget.searchQuery != null) {
-        // Text Search
+        // Text Search - skip OCR, but still use Gumloop
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Verifying medication...';
+          });
+        }
+
+        String verifiedQuery = widget.searchQuery!;
+        try {
+          final gumloopResult = await _gumloopService.verifyMedicationData(
+            widget.searchQuery!,
+          );
+          if (gumloopResult != null && gumloopResult.isNotEmpty) {
+            verifiedQuery = gumloopResult;
+          }
+        } catch (e) {
+          debugPrint('Gumloop verification skipped: $e');
+        }
+
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Analyzing medication...';
+          });
+        }
+
         result = await _aiService.analyzeMedicationText(
-          query: widget.searchQuery!,
+          query: verifiedQuery,
           userProfile: jsonEncode(profile.toJson()),
           currentMedications: medications.map((m) => m.toJson()).toList(),
           simpleMode: isSimpleMode,

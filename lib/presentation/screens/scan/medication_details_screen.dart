@@ -88,10 +88,22 @@ class MedicationDetailsScreen extends StatelessWidget {
           onPressed:
               () => Navigator.of(context).popUntil((route) => route.isFirst),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: ReadAloudButton(),
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ReadAloudButton(
+              pageContent: '''
+Medication: $name
+Dosage: $dosage
+Frequency: $frequency
+Instructions: $instructions
+${displayShortDesc != null ? 'Description: $displayShortDesc' : ''}
+${commonSideEffects.isNotEmpty ? 'Side Effects: ${commonSideEffects.join(', ')}' : ''}
+${userRisks.isNotEmpty ? 'Risks for you: ${userRisks.join(', ')}' : ''}
+Status: ${status.name}
+${displayStatusReason != null ? 'Reason: $displayStatusReason' : ''}
+''',
+            ),
           ),
         ],
       ),

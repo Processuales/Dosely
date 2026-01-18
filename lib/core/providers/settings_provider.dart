@@ -85,9 +85,10 @@ class SettingsProvider extends ChangeNotifier {
       await prefs.setString('locale_code', newLocale.languageCode);
 
       // If switching away from custom 'x' locale, clear the dynamic map
+      // but KEEP the customLanguageName so user can switch back
       if (newLocale.languageCode != 'x') {
         AppLocalizationsDynamic.currentDynamicMap = null;
-        _customLanguageName = null;
+        // DO NOT clear _customLanguageName - preserve it for dropdown
       }
 
       notifyListeners();

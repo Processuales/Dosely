@@ -227,7 +227,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
               // Title Section
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: scheduleItems.isEmpty ? 24 : 0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
