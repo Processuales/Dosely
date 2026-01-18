@@ -1,0 +1,63 @@
+name: dosely
+description: "Turn any medication label into a safe, conflict-checked schedule with accessibility-first guidance."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  
+  # Fonts & Icons
+  google_fonts: ^6.2.1
+  
+  # State Management
+  provider: ^6.1.2
+  
+  # Local Storage
+  shared_preferences: ^2.3.3
+  google_generative_ai: ^0.4.7
+  http: ^1.6.0
+  record: ^6.1.2
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  image_picker: ^1.1.2
+  equatable: ^2.0.8
+  
+  # Future use (commented for now)
+  # camera: ^0.11.0+2
+  # google_mlkit_text_recognition: ^0.14.0
+  # flutter_tts: ^4.2.0
+  # speech_to_text: ^7.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+  
+  assets:
+    - assets/images/
+    - assets/demo/
+  
+  # fonts:
+  #   - family: Lexend
+  #     fonts:
+  #       - asset: assets/fonts/Lexend-Regular.ttf
+  #         weight: 400
+  #       - asset: assets/fonts/Lexend-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Lexend-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/Lexend-Bold.ttf
+  #         weight: 700
+  #       - asset: assets/fonts/Lexend-ExtraBold.ttf
+  #         weight: 800

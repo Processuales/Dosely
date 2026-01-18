@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dosely Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0056D2","primary-hover": "#0044A5",
+                        "background-light": "#F8FAFC","surface": "#FFFFFF",
+                        "text-main": "#0F172A","text-sub": "#334155","status-safe": "#15803d","status-safe-bg": "#dcfce7","status-caution": "#b45309","status-caution-bg": "#fef3c7","status-conflict": "#be123c","status-conflict-bg": "#ffe4e6",},
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.375rem", "lg": "0.625rem", "xl": "1rem", "2xl": "1.25rem", "3xl": "1.5rem"},
+                    boxShadow: {
+                        'outline': '0 0 0 2px rgba(15, 23, 42, 0.1)',
+                        'outline-hover': '0 0 0 3px rgba(0, 86, 210, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-display text-text-main antialiased selection:bg-primary/20 selection:text-primary">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<header class="sticky top-0 z-20 flex items-center justify-between bg-background-light/95 border-b border-slate-200 px-6 py-5 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<div class="relative flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white shadow-sm ring-1 ring-slate-900/5 overflow-hidden">
+<div class="absolute inset-0 bg-blue-400 opacity-20 transform rotate-45 scale-150"></div>
+<span class="font-display text-4xl font-black relative z-10 leading-none pb-1 pr-1">D</span>
+<div class="absolute bottom-2 right-2 w-3 h-3 bg-white rounded-full z-10"></div>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-text-main">Dosely</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center rounded-lg border-2 border-slate-200 bg-white px-3 py-2 text-base font-bold tracking-wide text-text-main hover:border-primary hover:text-primary transition-all">
+                EN <span class="mx-1 text-slate-400">/</span> <span class="text-slate-400">FR</span>
+</button>
+<button aria-label="Accessibility Settings" class="flex h-12 w-12 items-center justify-center rounded-full border-2 border-slate-200 bg-white hover:border-primary hover:bg-slate-50 transition-all text-text-main">
+<span class="material-symbols-outlined text-2xl font-semibold">accessibility_new</span>
+</button>
+</div>
+</header>
+<section class="flex flex-col px-6 pt-8">
+<div class="mb-5 flex items-center justify-between">
+<h2 class="text-3xl font-bold leading-tight tracking-tight text-text-main">New Entry</h2>
+<button class="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-primary font-bold hover:bg-blue-50 focus:ring-2 focus:ring-primary/50 transition-all">
+<span class="material-symbols-outlined text-xl">volume_up</span>
+<span>Read Aloud</span>
+</button>
+</div>
+<button class="group relative flex w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border-2 border-primary bg-primary p-10 text-white shadow-xl shadow-blue-900/10 transition-transform active:scale-[0.98] hover:bg-primary-hover focus:outline-none focus:ring-4 focus:ring-blue-500/30">
+<div class="absolute right-0 top-0 h-48 w-48 -translate-y-1/2 translate-x-1/2 rounded-full bg-white/10 blur-3xl"></div>
+<div class="relative flex h-20 w-20 items-center justify-center rounded-full bg-white text-primary shadow-inner">
+<span class="material-symbols-outlined text-5xl font-bold">photo_camera</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-center">
+<span class="text-2xl font-bold tracking-wide">Scan Medication Label</span>
+<span class="text-base font-medium text-blue-50">Align label within the frame</span>
+</div>
+</button>
+</section>
+<section class="flex flex-col px-6 py-8">
+<div class="grid grid-cols-2 gap-5">
+<button class="group flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-slate-200 bg-surface p-6 text-text-main shadow-sm transition-all hover:border-primary hover:bg-blue-50/50 active:scale-[0.98]">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl font-semibold">qr_code_scanner</span>
+</div>
+<span class="text-base font-bold">Scan Ingredients</span>
+</button>
+<button class="group flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-slate-200 bg-surface p-6 text-text-main shadow-sm transition-all hover:border-primary hover:bg-blue-50/50 active:scale-[0.98]">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl font-semibold">keyboard</span>
+</div>
+<span class="text-base font-bold">Add Manually</span>
+</button>
+</div>
+</section>
+<section class="flex flex-1 flex-col px-6 pb-6">
+<div class="mb-5 flex items-center justify-between border-b border-slate-200 pb-2">
+<h2 class="text-2xl font-bold tracking-tight text-text-main">Recent Scans</h2>
+<button class="flex items-center gap-1 rounded-md px-2 py-1 text-base font-bold text-primary hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                View All
+                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="group flex cursor-pointer items-center justify-between rounded-2xl border-2 border-transparent bg-white p-5 shadow-sm ring-1 ring-slate-100 transition-all hover:border-primary hover:shadow-md hover:ring-0">
+<div class="flex items-center gap-5">
+<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-green-100 text-status-safe">
+<span class="material-symbols-outlined text-3xl font-bold">pill</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-xl font-bold text-text-main">Atorvastatin</span>
+<span class="text-sm font-semibold text-text-sub">20mg Tablet • 2 min ago</span>
+</div>
+</div>
+<div class="flex items-center rounded-lg border border-green-200 bg-status-safe-bg px-3 py-1.5">
+<span class="material-symbols-outlined mr-1 text-lg font-bold text-status-safe">check_circle</span>
+<span class="text-sm font-bold uppercase tracking-wide text-status-safe">Safe</span>
+</div>
+</div>
+<div class="group flex cursor-pointer items-center justify-between rounded-2xl border-2 border-transparent bg-white p-5 shadow-sm ring-1 ring-slate-100 transition-all hover:border-primary hover:shadow-md hover:ring-0">
+<div class="flex items-center gap-5">
+<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-amber-100 text-status-caution">
+<span class="material-symbols-outlined text-3xl font-bold">medication_liquid</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-xl font-bold text-text-main">Ibuprofen</span>
+<span class="text-sm font-semibold text-text-sub">400mg Liquid • Yesterday</span>
+</div>
+</div>
+<div class="flex items-center rounded-lg border border-amber-200 bg-status-caution-bg px-3 py-1.5">
+<span class="material-symbols-outlined mr-1 text-lg font-bold text-status-caution">error</span>
+<span class="text-sm font-bold uppercase tracking-wide text-status-caution">Caution</span>
+</div>
+</div>
+<div class="group flex cursor-pointer items-center justify-between rounded-2xl border-2 border-transparent border-l-8 border-l-status-conflict bg-white p-5 shadow-sm ring-1 ring-slate-100 transition-all hover:border-primary hover:border-l-status-conflict hover:shadow-md hover:ring-0">
+<div class="flex items-center gap-5">
+<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-rose-100 text-status-conflict">
+<span class="material-symbols-outlined text-3xl font-bold">warning</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-xl font-bold text-text-main">Warfarin</span>
+<span class="text-sm font-semibold text-text-sub">5mg Tablet • 2 days ago</span>
+</div>
+</div>
+<div class="flex items-center rounded-lg border border-rose-200 bg-status-conflict-bg px-3 py-1.5">
+<span class="material-symbols-outlined mr-1 text-lg font-bold text-status-conflict">dangerous</span>
+<span class="text-sm font-bold uppercase tracking-wide text-status-conflict">Conflict</span>
+</div>
+</div>
+<div class="group flex cursor-pointer items-center justify-between rounded-2xl border-2 border-transparent bg-white p-5 shadow-sm ring-1 ring-slate-100 transition-all hover:border-primary hover:shadow-md hover:ring-0">
+<div class="flex items-center gap-5">
+<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-green-100 text-status-safe">
+<span class="material-symbols-outlined text-3xl font-bold">vaccines</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="text-xl font-bold text-text-main">Amoxicillin</span>
+<span class="text-sm font-semibold text-text-sub">500mg Capsule • 3 days ago</span>
+</div>
+</div>
+<div class="flex items-center rounded-lg border border-green-200 bg-status-safe-bg px-3 py-1.5">
+<span class="material-symbols-outlined mr-1 text-lg font-bold text-status-safe">check_circle</span>
+<span class="text-sm font-bold uppercase tracking-wide text-status-safe">Safe</span>
+</div>
+</div>
+</div>
+</section>
+<nav class="fixed bottom-0 left-0 z-30 w-full border-t border-slate-200 bg-white px-6 pb-8 pt-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between px-2">
+<button class="flex flex-col items-center gap-1.5 text-primary">
+<div class="flex h-8 w-16 items-center justify-center rounded-full bg-blue-100">
+<span class="material-symbols-outlined text-3xl fill-1">home</span>
+</div>
+<span class="text-xs font-bold tracking-wide">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 text-slate-500 hover:text-primary transition-colors">
+<div class="flex h-8 w-16 items-center justify-center">
+<span class="material-symbols-outlined text-3xl font-medium">medication</span>
+</div>
+<span class="text-xs font-bold tracking-wide">My Meds</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 text-slate-500 hover:text-primary transition-colors">
+<div class="flex h-8 w-16 items-center justify-center">
+<span class="material-symbols-outlined text-3xl font-medium">person</span>
+</div>
+<span class="text-xs font-bold tracking-wide">Profile</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 text-slate-500 hover:text-primary transition-colors">
+<div class="flex h-8 w-16 items-center justify-center">
+<span class="material-symbols-outlined text-3xl font-medium">settings</span>
+</div>
+<span class="text-xs font-bold tracking-wide">Settings</span>
+</button>
+</div>
+</nav>
+</div>
+
+</body></html>

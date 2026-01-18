@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dosely Side Effects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-dark": "#0f6bd0",
+                        "danger": "#dc2626", // Accessible Bold Red
+                        "danger-dark": "#b91c1c",
+                        "background": "#ffffff",
+                        "surface": "#ffffff",
+                        "surface-alt": "#f8fafc",
+                        "text-main": "#0f172a", // High contrast black/dark gray
+                        "text-body": "#334155", // Readable gray
+                        "border-color": "#e2e8f0",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem"
+                    },
+                    boxShadow: {
+                        'card': '0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -2px rgba(0, 0, 0, 0.03)',
+                        'float': '0 10px 30px -5px rgba(0, 0, 0, 0.1)',
+                        'nav': '0 -4px 20px -5px rgba(0, 0, 0, 0.05)'
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background min-h-screen flex flex-col font-display antialiased text-text-main">
+    <header
+        class="flex items-center justify-between px-5 py-4 bg-background border-b border-border-color sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <button aria-label="Go back"
+                class="flex items-center justify-center text-text-main size-10 rounded-full hover:bg-surface-alt transition-colors border border-transparent hover:border-border-color">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+            </button>
+        </div>
+        <h1 class="text-xl font-bold tracking-tight text-center text-text-main flex-1 pr-2">Side Effects</h1>
+        <button
+            class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary hover:bg-primary-dark shadow-md shadow-blue-500/20 transition-all shrink-0 active:scale-95">
+            <span class="material-symbols-outlined text-white text-xl">volume_up</span>
+            <span class="text-white text-sm font-bold">Read Plan</span>
+        </button>
+    </header>
+    <div class="bg-background px-6 pt-6 pb-2 shrink-0">
+        <h2 class="text-3xl font-bold tracking-tight text-text-main mb-1">Atorvastatin 20mg</h2>
+        <div class="flex items-center gap-2 text-text-body mt-1">
+            <span class="material-symbols-outlined text-xl text-gray-400">schedule</span>
+            <p class="text-sm font-medium text-gray-600">Daily • Take with food</p>
+        </div>
+    </div>
+    <nav class="shrink-0 px-6 py-4 bg-background sticky top-[73px] z-40 backdrop-blur-sm bg-white/95">
+        <div class="flex p-1.5 bg-gray-100 rounded-2xl border border-gray-200">
+            <button
+                class="flex-1 py-3 px-3 rounded-xl bg-white text-primary shadow-sm border border-gray-200 flex items-center justify-center gap-2 transition-all">
+                <span class="text-sm font-bold">Common</span>
+            </button>
+            <button
+                class="flex-1 py-3 px-3 rounded-xl text-gray-500 hover:text-text-main hover:bg-gray-50 flex items-center justify-center gap-2 transition-all">
+                <span class="text-sm font-medium">Serious</span>
+            </button>
+            <button
+                class="flex-1 py-3 px-3 rounded-xl text-gray-500 hover:text-text-main hover:bg-gray-50 flex items-center justify-center gap-2 transition-all">
+                <span class="text-sm font-medium">Get Help</span>
+            </button>
+        </div>
+    </nav>
+    <main class="flex-1 overflow-y-auto px-6 space-y-6 pb-32 hide-scrollbar pt-2">
+        <div class="flex items-center gap-2 pb-2">
+            <span class="material-symbols-outlined text-primary text-xl">info</span>
+            <span class="text-xs uppercase font-bold tracking-wider text-primary">Common Side Effects</span>
+        </div>
+        <div
+            class="group flex gap-5 bg-white rounded-2xl p-5 shadow-card border border-border-color hover:border-primary/40 transition-all cursor-pointer">
+            <div class="shrink-0">
+                <div class="flex items-center justify-center rounded-2xl bg-blue-50 size-14 text-primary">
+                    <span class="material-symbols-outlined text-2xl">sentiment_dissatisfied</span>
+                </div>
+            </div>
+            <div class="flex flex-1 flex-col justify-center gap-2">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-bold leading-tight text-text-main">Headache</h3>
+                    <span
+                        class="text-xs font-bold text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">Very
+                        Common</span>
+                </div>
+                <p class="text-sm text-text-body leading-relaxed">
+                    Mild to moderate pain in the head. Drink water and rest in a dark room.
+                </p>
+            </div>
+            <div class="shrink-0 self-center">
+                <span
+                    class="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">chevron_right</span>
+            </div>
+        </div>
+        <div
+            class="group flex gap-5 bg-white rounded-2xl p-5 shadow-card border border-border-color hover:border-primary/40 transition-all cursor-pointer">
+            <div class="shrink-0">
+                <div class="flex items-center justify-center rounded-2xl bg-blue-50 size-14 text-primary">
+                    <span class="material-symbols-outlined text-2xl">sick</span>
+                </div>
+            </div>
+            <div class="flex flex-1 flex-col justify-center gap-2">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-bold leading-tight text-text-main">Nausea</h3>
+                    <span
+                        class="text-xs font-bold text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">Common</span>
+                </div>
+                <p class="text-sm text-text-body leading-relaxed">
+                    Feeling of sickness with an inclination to vomit. Take with small meals.
+                </p>
+            </div>
+            <div class="shrink-0 self-center">
+                <span
+                    class="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">chevron_right</span>
+            </div>
+        </div>
+        <div
+            class="group flex gap-5 bg-white rounded-2xl p-5 shadow-card border border-border-color hover:border-primary/40 transition-all cursor-pointer">
+            <div class="shrink-0">
+                <div class="flex items-center justify-center rounded-2xl bg-blue-50 size-14 text-primary">
+                    <span class="material-symbols-outlined text-2xl">bedtime</span>
+                </div>
+            </div>
+            <div class="flex flex-1 flex-col justify-center gap-2">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-bold leading-tight text-text-main">Drowsiness</h3>
+                    <span
+                        class="text-xs font-bold text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">Occasional</span>
+                </div>
+                <p class="text-sm text-text-body leading-relaxed">
+                    Feeling unusually tired or sleepy during the day. Avoid driving if affected.
+                </p>
+            </div>
+            <div class="shrink-0 self-center">
+                <span
+                    class="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">chevron_right</span>
+            </div>
+        </div>
+        <div
+            class="group flex gap-5 bg-white rounded-2xl p-5 shadow-card border border-border-color hover:border-primary/40 transition-all cursor-pointer">
+            <div class="shrink-0">
+                <div class="flex items-center justify-center rounded-2xl bg-blue-50 size-14 text-primary">
+                    <span class="material-symbols-outlined text-2xl">gastroenterology</span>
+                </div>
+            </div>
+            <div class="flex flex-1 flex-col justify-center gap-2">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-bold leading-tight text-text-main">Indigestion</h3>
+                    <span
+                        class="text-xs font-bold text-gray-600 bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200">Common</span>
+                </div>
+                <p class="text-sm text-text-body leading-relaxed">
+                    Discomfort in stomach area. Avoid spicy foods while taking medication.
+                </p>
+            </div>
+            <div class="shrink-0 self-center">
+                <span
+                    class="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">chevron_right</span>
+            </div>
+        </div>
+        <div class="pt-6 flex justify-center">
+            <a class="text-sm font-semibold text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary transition-all flex items-center gap-1"
+                href="#">
+                Source: FDA / NIH Database (Last updated: Oct 2023)
+                <span class="material-symbols-outlined text-base">open_in_new</span>
+            </a>
+        </div>
+        <div class="flex flex-col gap-4 pt-6 pb-8">
+            <button
+                class="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary-dark text-white font-bold text-lg py-4 rounded-2xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all">
+                <span class="material-symbols-outlined filled">call</span>
+                Call Pharmacist
+            </button>
+            <button
+                class="w-full flex items-center justify-center gap-3 bg-danger hover:bg-danger-dark text-white font-bold text-lg py-4 rounded-2xl shadow-lg shadow-red-500/20 active:scale-[0.98] transition-all">
+                <span class="material-symbols-outlined filled">emergency</span>
+                Emergency Guidance
+            </button>
+        </div>
+    </main>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-border-color pb-safe pt-2 px-2 z-50 shadow-nav">
+        <div class="flex justify-around items-center h-16">
+            <button
+                class="flex flex-col items-center justify-center gap-1 w-full text-gray-400 hover:text-text-main transition-colors">
+                <span class="material-symbols-outlined text-2xl">home</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </button>
+            <button class="flex flex-col items-center justify-center gap-1 w-full text-primary">
+                <span class="material-symbols-outlined text-2xl filled">medication</span>
+                <span class="text-[10px] font-bold">My Meds</span>
+            </button>
+            <button
+                class="flex flex-col items-center justify-center gap-1 w-full text-gray-400 hover:text-text-main transition-colors">
+                <span class="material-symbols-outlined text-2xl">person</span>
+                <span class="text-[10px] font-medium">Profile</span>
+            </button>
+            <button
+                class="flex flex-col items-center justify-center gap-1 w-full text-gray-400 hover:text-text-main transition-colors">
+                <span class="material-symbols-outlined text-2xl">settings</span>
+                <span class="text-[10px] font-medium">Settings</span>
+            </button>
+        </div>
+    </nav>
+</body>
+
+</html>

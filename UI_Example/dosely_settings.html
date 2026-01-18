@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dosely Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0055FF", "primary-dark": "#0033CC",
+                        "surface": "#FFFFFF",
+                        "contrast-border": "#000000",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px #000000',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            cursor: pointer;
+            margin-top: -14px;
+            border: 4px solid #000000;
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 12px;
+            cursor: pointer;
+            background: #E5E7EB;
+            border: 2px solid #000000;
+            border-radius: 999px;
+        }
+
+        input[type=range]:focus::-webkit-slider-thumb {
+            background: #000000;
+            border-color: #FFFFFF;
+        }
+
+        .material-symbols-filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-[#F8FAFC] text-black font-display antialiased">
+    <div
+        class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-white border-x-2 border-black pb-28">
+        <div
+            class="sticky top-0 z-20 flex items-center bg-white p-6 pb-4 justify-center border-b-2 border-black shadow-sm">
+            <h1 class="text-black text-2xl font-black uppercase tracking-tight text-center px-2">Dosely</h1>
+        </div>
+        <div class="flex-1 p-5 space-y-10 pb-6">
+            <button
+                class="w-full bg-primary text-white border-2 border-black shadow-hard rounded-2xl p-4 flex items-center justify-between hover:bg-primary-dark active:translate-y-1 transition-all group">
+                <div class="flex items-center gap-4">
+                    <div
+                        class="bg-white/20 p-3 rounded-xl border-2 border-transparent group-hover:border-white transition-all">
+                        <span class="material-symbols-outlined text-3xl font-bold">volume_up</span>
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <span class="text-xl font-black uppercase tracking-wide">Read Aloud</span>
+                        <span class="text-white/90 font-bold text-sm">Tap to hear screen content</span>
+                    </div>
+                </div>
+                <span class="material-symbols-outlined text-3xl">play_circle</span>
+            </button>
+            <section aria-labelledby="visual-aids-title">
+                <h2 class="text-black text-xl font-black uppercase tracking-wide mb-4 flex items-center gap-2"
+                    id="visual-aids-title">
+                    <span class="material-symbols-outlined font-bold text-3xl">visibility</span>
+                    Visual Aids
+                </h2>
+                <div class="flex flex-col gap-4">
+                    <div
+                        class="flex items-center justify-between bg-white p-5 rounded-2xl border-2 border-black shadow-hard">
+                        <div class="flex flex-col gap-1 pr-4">
+                            <label class="text-black text-xl font-bold leading-tight" for="high-contrast">High
+                                Contrast</label>
+                            <span class="text-slate-700 text-base font-semibold">Increases color distinction</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input class="sr-only peer" id="high-contrast" type="checkbox" />
+                            <div
+                                class="w-20 h-11 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-black border-2 border-black transition-all duration-200 after:content-[''] after:absolute after:top-[6px] after:left-[6px] after:bg-white after:border-2 after:border-black after:rounded-full after:h-8 after:w-8 after:transition-all peer-checked:after:translate-x-9 peer-checked:after:border-black">
+                            </div>
+                        </label>
+                    </div>
+                    <div
+                        class="flex items-center justify-between bg-white p-5 rounded-2xl border-2 border-black shadow-hard">
+                        <div class="flex flex-col gap-1 pr-4">
+                            <label class="text-black text-xl font-bold leading-tight" for="large-buttons">Large
+                                Buttons</label>
+                            <span class="text-slate-700 text-base font-semibold">Easier to tap areas</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input class="sr-only peer" id="large-buttons" type="checkbox" />
+                            <div
+                                class="w-20 h-11 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-black border-2 border-black transition-all duration-200 after:content-[''] after:absolute after:top-[6px] after:left-[6px] after:bg-white after:border-2 after:border-black after:rounded-full after:h-8 after:w-8 after:transition-all peer-checked:after:translate-x-9 peer-checked:after:border-black">
+                            </div>
+                        </label>
+                    </div>
+                    <div
+                        class="flex items-center justify-between bg-white p-5 rounded-2xl border-2 border-black shadow-hard">
+                        <div class="flex flex-col gap-1 pr-4">
+                            <label class="text-black text-xl font-bold leading-tight" for="plain-lang">Plain
+                                Language</label>
+                            <span class="text-slate-700 text-base font-semibold">Simple medical terms</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input class="sr-only peer" id="plain-lang" type="checkbox" />
+                            <div
+                                class="w-20 h-11 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-black border-2 border-black transition-all duration-200 after:content-[''] after:absolute after:top-[6px] after:left-[6px] after:bg-white after:border-2 after:border-black after:rounded-full after:h-8 after:w-8 after:transition-all peer-checked:after:translate-x-9 peer-checked:after:border-black">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </section>
+            <section aria-labelledby="typography-title">
+                <h2 class="text-black text-xl font-black uppercase tracking-wide mb-4 flex items-center gap-2"
+                    id="typography-title">
+                    <span class="material-symbols-outlined font-bold text-3xl">text_fields</span>
+                    Text Size
+                </h2>
+                <div class="bg-white p-6 rounded-2xl border-2 border-black shadow-hard space-y-6">
+                    <div class="flex items-center justify-between w-full gap-4 pt-2">
+                        <span class="material-symbols-outlined text-black text-2xl font-bold">text_fields</span>
+                        <div class="relative w-full flex items-center h-10">
+                            <input aria-label="Text Size Slider" class="w-full h-full cursor-pointer" max="100" min="1"
+                                type="range" value="75" />
+                        </div>
+                        <span class="material-symbols-outlined text-black text-5xl font-bold">text_fields</span>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-xl border-2 border-black border-dashed">
+                        <p class="text-sm text-black mb-3 uppercase font-black tracking-wider">Preview</p>
+                        <p class="text-black text-2xl leading-normal font-bold">
+                            Take 1 pill daily. <br />
+                            <span class="text-slate-700 text-xl font-semibold">Next dose at 8:00 PM</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section aria-labelledby="audio-title">
+                <h2 class="text-black text-xl font-black uppercase tracking-wide mb-4 flex items-center gap-2"
+                    id="audio-title">
+                    <span class="material-symbols-outlined font-bold text-3xl">volume_up</span>
+                    Audio &amp; Haptics
+                </h2>
+                <div class="flex flex-col gap-4">
+                    <div
+                        class="flex items-center justify-between bg-white p-5 rounded-2xl border-2 border-black shadow-hard">
+                        <div class="flex flex-col gap-1 pr-4">
+                            <label class="text-black text-xl font-bold leading-tight" for="haptics">Haptic
+                                Feedback</label>
+                            <span class="text-slate-700 text-base font-semibold">Vibrate on action</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input checked="" class="sr-only peer" id="haptics" type="checkbox" />
+                            <div
+                                class="w-20 h-11 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-black border-2 border-black transition-all duration-200 after:content-[''] after:absolute after:top-[6px] after:left-[6px] after:bg-white after:border-2 after:border-black after:rounded-full after:h-8 after:w-8 after:transition-all peer-checked:after:translate-x-9 peer-checked:after:border-black">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </section>
+            <section aria-labelledby="lang-title">
+                <h2 class="text-black text-xl font-black uppercase tracking-wide mb-4 flex items-center gap-2"
+                    id="lang-title">
+                    <span class="material-symbols-outlined font-bold text-3xl">language</span>
+                    Language
+                </h2>
+                <div class="relative bg-white rounded-2xl border-2 border-black shadow-hard overflow-hidden">
+                    <div class="flex items-center justify-between p-5 min-h-[80px]">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-black text-xl font-bold leading-tight">System Language</span>
+                            <span class="text-slate-700 text-base font-semibold">Currently: English (US)</span>
+                        </div>
+                        <span class="material-symbols-outlined text-black font-bold text-3xl">expand_more</span>
+                    </div>
+                    <select aria-label="Select Language"
+                        class="absolute inset-0 opacity-0 w-full h-full cursor-pointer appearance-none">
+                        <option value="en">English (US)</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+            </section>
+            <div class="pt-6">
+                <button
+                    class="w-full bg-slate-100 text-black border-2 border-black font-black text-xl px-6 py-5 rounded-2xl hover:bg-slate-200 active:translate-y-1 transition-all">
+                    Reset Settings
+                </button>
+            </div>
+        </div>
+        <nav
+            class="fixed bottom-0 w-full max-w-md bg-white border-t-2 border-black flex justify-around items-end p-4 pb-6 z-30 shadow-[0_-4px_0px_0px_rgba(0,0,0,0.05)]">
+            <button
+                class="flex flex-col items-center gap-1 text-slate-400 hover:text-black transition-colors group w-16">
+                <span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">home</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Home</span>
+            </button>
+            <button
+                class="flex flex-col items-center gap-1 text-slate-400 hover:text-black transition-colors group w-16">
+                <span
+                    class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">medication</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider">My Meds</span>
+            </button>
+            <button
+                class="flex flex-col items-center gap-1 text-slate-400 hover:text-black transition-colors group w-16">
+                <span
+                    class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">person</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Profile</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-primary w-16">
+                <span class="material-symbols-outlined text-3xl material-symbols-filled">settings</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Settings</span>
+            </button>
+        </nav>
+    </div>
+
+</body>
+
+</html>

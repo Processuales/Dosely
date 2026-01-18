@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dosely Today's Plan</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0056b3",
+                        "text-main": "#111418",
+                        "amber-high": "#d97706",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .icon-bold {
+            font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-size: 18px;
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-white text-[#111418] font-display overflow-x-hidden flex flex-col min-h-screen">
+    <div class="flex items-center bg-white p-5 justify-between sticky top-0 z-50 border-b-2 border-gray-200">
+        <div
+            class="text-black flex size-14 shrink-0 items-center justify-center cursor-pointer rounded-full hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-gray-300">
+            <span class="material-symbols-outlined text-3xl">arrow_back</span>
+        </div>
+        <h2 class="text-black text-2xl font-extrabold leading-tight tracking-tight flex-1 text-center pr-14">
+            Dosely
+        </h2>
+    </div>
+    <main class="flex-1 flex flex-col gap-8 p-5 max-w-md mx-auto w-full pb-32">
+        <button
+            class="flex w-full items-center justify-center gap-3 rounded-2xl h-16 bg-[#111418] text-white shadow-lg hover:bg-gray-800 transition-colors border-2 border-transparent focus:ring-4 focus:ring-gray-300 group">
+            <span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">volume_up</span>
+            <span class="text-xl font-bold tracking-wide">Read Plan Aloud</span>
+        </button>
+        <div class="space-y-2">
+            <h1 class="text-black tracking-tight text-4xl font-extrabold leading-tight text-left">
+                Your Plan for Today
+            </h1>
+            <p class="text-gray-600 text-xl font-medium">Review your scanned medication.</p>
+        </div>
+        <div class="flex flex-col gap-4">
+            <div
+                class="flex flex-row-reverse items-stretch justify-between gap-5 rounded-2xl bg-white p-5 shadow-sm border-2 border-gray-200">
+                <div class="w-28 shrink-0 bg-center bg-no-repeat bg-cover rounded-xl border-2 border-gray-100"
+                    data-alt="Close up of a red pill bottle with a white cap"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuANz2gmc6dVekng8G6BmKjj7lZvvg2QtjLI8pwcLpLdgMXjRnUP-WHP-zPPb3gD_NY254M7aicLh68mBZkilY5P7kZs_BF2w8ugqHVY1t_ygeEXZfk9Yrl0yXjJtJxMdPzucAN6GXrLUKJPRXj6cFMCY7CkXc2xG6swvCbHzOVBe0rK_RFLB8Cq0XuzoI2lf87T6AwipG4bajx81n-aV08lmCrm-71v6GsZEDfKiMG2ptXRU4DqtxXOluN0i3GFXg_g11ZAEDiWblWp");'>
+                </div>
+                <div class="flex flex-col justify-between flex-1 py-1">
+                    <div>
+                        <div
+                            class="inline-flex items-center gap-2 rounded-full bg-green-100 border-2 border-green-600 px-3 py-1 mb-3">
+                            <span class="material-symbols-outlined text-green-800 text-lg icon-bold">check_circle</span>
+                            <span class="text-green-900 text-xs font-bold uppercase tracking-wider">High
+                                Confidence</span>
+                        </div>
+                        <h2 class="text-black text-2xl font-extrabold leading-tight">Advil 200mg</h2>
+                    </div>
+                    <p class="text-gray-700 text-base font-bold">Ibuprofen • Pain Reliever</p>
+                </div>
+            </div>
+        </div>
+        <div class="@container">
+            <div
+                class="flex flex-col gap-5 rounded-2xl border-l-[8px] border-l-amber-600 border-y-2 border-r-2 border-amber-200 bg-amber-50 p-6 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <span
+                        class="material-symbols-outlined text-amber-700 text-4xl shrink-0 icon-bold mt-1">warning</span>
+                    <div class="flex flex-col gap-2">
+                        <p class="text-black text-2xl font-extrabold leading-tight">Possible duplicate ingredient</p>
+                        <p class="text-gray-900 text-lg font-medium leading-relaxed">
+                            You are already taking <span
+                                class="font-extrabold bg-amber-200 px-1 rounded">Ibuprofen</span> in another medication.
+                            This may exceed safe daily limits.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    class="flex w-full items-center justify-center rounded-xl h-14 px-6 bg-white text-amber-900 text-lg font-bold border-2 border-amber-600 hover:bg-amber-100 transition-colors">
+                    View Details
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col gap-6">
+            <h3 class="text-black text-2xl font-extrabold px-1">Daily Schedule</h3>
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-4 rounded-2xl border-2 border-gray-300 bg-gray-50 p-5">
+                    <div class="flex items-center gap-3 border-b-2 border-gray-200 pb-3">
+                        <span class="material-symbols-outlined text-3xl text-amber-600 icon-bold">wb_sunny</span>
+                        <span class="text-gray-900 text-lg font-bold uppercase tracking-wider">Morning</span>
+                    </div>
+                    <div class="rounded-xl bg-white border-2 border-black p-5 shadow-md">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-2xl font-extrabold text-black">Advil 200mg</span>
+                            <div class="bg-black text-white rounded-full p-1">
+                                <span class="material-symbols-outlined text-2xl">medication</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <div
+                                class="flex items-center gap-2 bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2">
+                                <span class="material-symbols-outlined text-black text-2xl icon-bold">pill</span>
+                                <span class="text-black text-base font-bold">1 tablet</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-2 bg-gray-100 border-2 border-gray-300 rounded-lg px-4 py-2">
+                                <span class="material-symbols-outlined text-black text-2xl icon-bold">restaurant</span>
+                                <span class="text-black text-base font-bold">With food</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 rounded-2xl border-2 border-gray-200 bg-white p-5 opacity-80">
+                    <div class="flex items-center gap-3 border-b-2 border-gray-100 pb-3">
+                        <span class="material-symbols-outlined text-3xl text-gray-500 icon-bold">wb_twilight</span>
+                        <span class="text-gray-600 text-lg font-bold uppercase tracking-wider">Midday</span>
+                    </div>
+                    <p class="text-gray-500 text-lg font-medium italic pl-1">No medications scheduled</p>
+                </div>
+                <div class="flex flex-col gap-4 rounded-2xl border-2 border-gray-200 bg-white p-5 opacity-80">
+                    <div class="flex items-center gap-3 border-b-2 border-gray-100 pb-3">
+                        <span class="material-symbols-outlined text-3xl text-gray-500 icon-bold">nights_stay</span>
+                        <span class="text-gray-600 text-lg font-bold uppercase tracking-wider">Evening</span>
+                    </div>
+                    <p class="text-gray-500 text-lg font-medium italic pl-1">No medications scheduled</p>
+                </div>
+                <div class="flex flex-col gap-4 rounded-2xl border-2 border-gray-200 bg-white p-5 opacity-80">
+                    <div class="flex items-center gap-3 border-b-2 border-gray-100 pb-3">
+                        <span class="material-symbols-outlined text-3xl text-indigo-500 icon-bold">bedtime</span>
+                        <span class="text-gray-600 text-lg font-bold uppercase tracking-wider">Night</span>
+                    </div>
+                    <p class="text-gray-500 text-lg font-medium italic pl-1">No medications scheduled</p>
+                </div>
+            </div>
+        </div>
+        <button
+            class="flex items-center justify-center gap-2 h-14 rounded-xl border-2 border-dashed border-gray-400 text-gray-700 text-lg font-bold bg-gray-50 hover:bg-gray-100 hover:border-gray-500 transition-colors">
+            <span class="material-symbols-outlined icon-bold">add_circle</span>
+            Add Another Medication
+        </button>
+    </main>
+    <nav class="sticky bottom-0 bg-white border-t-2 border-gray-200 pt-3 pb-6 px-6 z-50">
+        <div class="flex justify-between items-center max-w-md mx-auto">
+            <a class="flex flex-col items-center gap-1 text-primary w-16" href="#">
+                <span class="material-symbols-outlined text-3xl icon-bold">home</span>
+                <span class="text-xs font-bold">Home</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-700 transition-colors w-16"
+                href="#">
+                <span class="material-symbols-outlined text-3xl">medication</span>
+                <span class="text-xs font-bold">My Meds</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-700 transition-colors w-16"
+                href="#">
+                <span class="material-symbols-outlined text-3xl">person</span>
+                <span class="text-xs font-bold">Profile</span>
+            </a>
+            <a class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-700 transition-colors w-16"
+                href="#">
+                <span class="material-symbols-outlined text-3xl">settings</span>
+                <span class="text-xs font-bold">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+</body>
+
+</html>

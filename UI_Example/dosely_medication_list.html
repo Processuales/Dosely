@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dosely Medication List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-hover": "#106DD0",
+                        "background-light": "#f6f7f8",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -1px rgba(0, 0, 0, 0.02)',
+                        'card': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light text-slate-900 font-display antialiased overflow-hidden h-screen w-full flex justify-center">
+    <div
+        class="relative flex flex-col h-full w-full max-w-md bg-background-light overflow-hidden shadow-2xl ring-1 ring-black/5">
+        <div class="h-10 w-full shrink-0 bg-background-light"></div>
+        <header class="flex items-center justify-between px-6 py-4 shrink-0 bg-background-light z-10">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900">Dosely</h1>
+                <p class="text-sm text-slate-500 font-medium mt-0.5">Today, Oct 24</p>
+            </div>
+            <div class="flex gap-3">
+                <button aria-label="Read Aloud"
+                    class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors shadow-sm">
+                    <span class="material-symbols-outlined">volume_up</span>
+                </button>
+                <button
+                    class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors shadow-sm">
+                    <span class="material-symbols-outlined">account_circle</span>
+                </button>
+            </div>
+        </header>
+        <div class="px-6 pb-4 shrink-0">
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span
+                        class="material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+                </div>
+                <input
+                    class="block w-full pl-10 pr-3 py-3 rounded-xl text-sm bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary border border-slate-200 shadow-sm transition-all"
+                    placeholder="Search your medications..." type="text" />
+            </div>
+        </div>
+        <main class="flex-1 overflow-y-auto px-6 pb-24 space-y-4">
+            <div
+                class="group bg-white rounded-2xl p-4 shadow-card border border-slate-200 active:scale-[0.99] transition-all cursor-pointer">
+                <div class="flex items-start justify-between">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative">
+                            <div class="absolute inset-0 bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAFTPBzSJcVH8KU6_ayaXw0KI-FmyUwqSDH_Ctn_sHCDHHuhR4xSzCVocSfJNa3tjXSaffv4ArvlLFbD58WP5sHFER0KRoxsiIo5O8IKnVgkceVEMLOkRMckif_3ShM5B0Nuy0W39jQ-VACwpB4uusPVbphXI-uGfkWg0Dly6AEfX3S2k9I1h2P5RT1qRX62ElK5LPJ3vIUzK1EFqoPvSyvc6iPAaD22KaywKeI_CiAO75UjrGQUEXiCGuE_SBBW2833kvkccMzAPkd');">
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-base font-bold text-slate-900 leading-tight">Lisinopril</h3>
+                            <p class="text-sm text-slate-500 mt-1 font-medium">10mg • Daily</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-3">
+                        <span
+                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <span class="material-symbols-outlined text-[16px] leading-none">check_circle</span>
+                            Safe
+                        </span>
+                        <span
+                            class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="group bg-white rounded-2xl p-4 shadow-card border border-slate-200 active:scale-[0.99] transition-all cursor-pointer">
+                <div class="flex items-start justify-between">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative">
+                            <div class="absolute inset-0 bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBHQ7mYcp2QhglZOPDUnTNkRH977Bs1UuCsD35VHd9Yvl27Q0pDSyCyE_sHLkcUx__fQXfb_wG-jtRsXanN52z1qVkt-FTYc9uJtIySHu11_tVthO_FynFViF28iCeEP7xlz4fAebHKQ1xeo8gGVFXBlMugetYMYU1vFnZlrEZkaegW4u6QHzXvpE1GRfb6QEMhvFqskF7i2CY7dSVBRfh0zWc8WtuQm-olXX3WkVLARIR1Mu_Dkw5xYnmFEUbwYV0lbINKbrAo21_Y');">
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-base font-bold text-slate-900 leading-tight">Advil (Ibuprofen)</h3>
+                            <p class="text-sm text-slate-500 mt-1 font-medium">200mg • As needed</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-3">
+                        <span
+                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200">
+                            <span class="material-symbols-outlined text-[16px] leading-none">warning</span>
+                            Caution
+                        </span>
+                        <span
+                            class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="group relative bg-white rounded-2xl p-4 shadow-md border border-red-200 active:scale-[0.99] transition-all cursor-pointer overflow-hidden ring-1 ring-red-50">
+                <div class="absolute inset-0 bg-red-50/60 pointer-events-none"></div>
+                <div class="flex items-start justify-between relative z-10">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-white border border-red-100 overflow-hidden shrink-0 relative">
+                            <div class="absolute inset-0 bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvhxMesmiK0ZoXVMPoMINkTFwVMuXJsYRY2m153jbjcG4f7J3sU-v_04O_hcnrilkJp87G9Gci-RP-Ksn95NeHj4on7gVC3v8DDpvpeptuubvwFpPHmak15wCn9QYwut9bC-XakXRvsVgE7Uc5DrcdZfVNDUk1MUfRGO8Qh_aTHH3KAVFMuhfiG2O3ro_xw2uSXt0gH6XCCGiSSahFyH1UmgEnHTiqFUQfEfab5EzFegbq3JSNSb6Gnf4u5TiZC8bWuA0RSc6fG7b6');">
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-base font-bold text-slate-900 leading-tight">Warfarin</h3>
+                            <p class="text-sm text-slate-500 mt-1 font-medium">5mg • Evening</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-3">
+                        <span
+                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-white text-red-700 border border-red-200 shadow-sm">
+                            <span class="material-symbols-outlined text-[16px] leading-none">error</span>
+                            Conflict
+                        </span>
+                        <span
+                            class="material-symbols-outlined text-red-300 group-hover:text-red-500 transition-colors">expand_more</span>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-t border-red-200 flex items-start gap-2 relative z-10">
+                    <span class="material-symbols-outlined text-red-600 text-sm mt-0.5">info</span>
+                    <p class="text-xs text-red-800 leading-relaxed font-medium">
+                        Potential interaction with <span class="font-bold text-red-900">Ibuprofen</span>. Increases
+                        bleeding risk. Consult your doctor.
+                    </p>
+                </div>
+            </div>
+            <div
+                class="group bg-white rounded-2xl p-4 shadow-card border border-slate-200 active:scale-[0.99] transition-all cursor-pointer">
+                <div class="flex items-start justify-between">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative">
+                            <div class="absolute inset-0 bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDlSg2Q-DTTSrtDqUlfb6XVUGmkXvrttsKPn4h9P3e5cN99yaxb6AfbMYqZQzx4eHePfkfUlFUYPmH_PVtRAmSoc7bYwOjuVFIk1ZEIisVZ2SFSg7LYmxlkRvfRK8lW0anx_3BAIcBm03eml5JQdpvATBqugPG8RhmjsBJuY5yxho9mxk-OLAHGJuumaNw7-k0f8JWT-77Sei7nb0oUP0bWfI9DEqcNQUY8x_9A7cs77fwE0zkhW1weaJDp1DWVelJa635-1s32ALoF');">
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-base font-bold text-slate-900 leading-tight">Vitamin C</h3>
+                            <p class="text-sm text-slate-500 mt-1 font-medium">500mg • Morning</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-3">
+                        <span
+                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <span class="material-symbols-outlined text-[16px] leading-none">check_circle</span>
+                            Safe
+                        </span>
+                        <span
+                            class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="group bg-white rounded-2xl p-4 shadow-card border border-slate-200 active:scale-[0.99] transition-all cursor-pointer">
+                <div class="flex items-start justify-between">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-14 h-14 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative">
+                            <div class="absolute inset-0 bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBU0GuQdUp28JzGZRPm2ZdTxXhdD-roFMBBS0XhcBxzAO4jcxeQLRwJ5UEG1vA98FLLOwRBOJ6OXTc-N7wG2dmEvsZEu-O-DBePxTZIW5h1Tqm1HONbIMyEI4s1dDSqHAYtibfj7Pzpcky_kzqOsuKLZZ2eJgOBXJO9Z7i5P2Lj-rGZy6QAXAai3aFUA6zseYBXTWTbDpazYs6Rj7YQOI8rrIHbqQ95PPRaNeihe6P07OmKlCtTbbbJXUUeBMLb8mUtgZs9WiI8FZHn');">
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h3 class="text-base font-bold text-slate-900 leading-tight">Atorvastatin</h3>
+                            <p class="text-sm text-slate-500 mt-1 font-medium">20mg • Nightly</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end gap-3">
+                        <span
+                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <span class="material-symbols-outlined text-[16px] leading-none">check_circle</span>
+                            Safe
+                        </span>
+                        <span
+                            class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors">expand_more</span>
+                    </div>
+                </div>
+            </div>
+            <div class="h-20"></div>
+        </main>
+        <div class="absolute bottom-24 right-6 z-50">
+            <button aria-label="Add New Medication"
+                class="group flex items-center justify-center w-16 h-16 rounded-full bg-primary hover:bg-primary-hover text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/30">
+                <span
+                    class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300">add</span>
+            </button>
+        </div>
+        <nav
+            class="absolute bottom-0 inset-x-0 bg-white border-t border-slate-200 flex justify-around items-center h-20 pb-4 z-40 text-xs font-medium text-slate-500">
+            <a class="flex flex-col items-center justify-center w-full h-full gap-1 hover:text-primary transition-colors"
+                href="#">
+                <span class="material-symbols-outlined text-2xl">home</span>
+                <span>Home</span>
+            </a>
+            <a class="flex flex-col items-center justify-center w-full h-full gap-1 text-primary" href="#">
+                <span class="material-symbols-outlined text-2xl fill-1">medication</span>
+                <span>My Meds</span>
+            </a>
+            <a class="flex flex-col items-center justify-center w-full h-full gap-1 hover:text-primary transition-colors"
+                href="#">
+                <span class="material-symbols-outlined text-2xl">person</span>
+                <span>Profile</span>
+            </a>
+            <a class="flex flex-col items-center justify-center w-full h-full gap-1 hover:text-primary transition-colors"
+                href="#">
+                <span class="material-symbols-outlined text-2xl">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+</body>
+
+</html>

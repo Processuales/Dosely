@@ -1,0 +1,12 @@
+# Placeholder for Lexend fonts
+# Download from: https://fonts.google.com/specimen/Lexend
+# 
+# Required files:
+# - Lexend-Regular.ttf
+# - Lexend-Medium.ttf
+# - Lexend-SemiBold.ttf
+# - Lexend-Bold.ttf
+# - Lexend-ExtraBold.ttf
+#
+# Note: The app uses google_fonts package which downloads fonts automatically.
+# These files are only needed for offline builds.

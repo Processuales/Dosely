@@ -1,0 +1,464 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2026-01-17T13:45:00-05:00",
+  
+  "appName": "Dosely",
+  "@appName": {
+    "description": "The name of the application"
+  },
+  
+  "tagline": "Medication made clear",
+  "@tagline": {
+    "description": "App tagline"
+  },
+
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom navigation: Home tab"
+  },
+  
+  "navMyMeds": "My Meds",
+  "@navMyMeds": {
+    "description": "Bottom navigation: My Medications tab"
+  },
+
+  "navSchedule": "Schedule",
+  "@navSchedule": {
+    "description": "Bottom navigation: Schedule tab"
+  },
+  
+  "navProfile": "Profile",
+  "@navProfile": {
+    "description": "Bottom navigation: Profile tab"
+  },
+  
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Bottom navigation: Settings tab"
+  },
+
+  "homeTitle": "New Entry",
+  "@homeTitle": {
+    "description": "Home screen main title"
+  },
+  
+  "homeScanLabel": "Scan Medication Label",
+  "@homeScanLabel": {
+    "description": "Primary scan button text"
+  },
+  
+  "homeScanSubtitle": "Align label within the frame",
+  "@homeScanSubtitle": {
+    "description": "Scan button subtitle"
+  },
+  
+  "homeScanIngredients": "Scan Ingredients",
+  "@homeScanIngredients": {
+    "description": "Secondary action: scan ingredients"
+  },
+  
+  "homeAddManually": "Add Manually",
+  "@homeAddManually": {
+    "description": "Secondary action: manual entry"
+  },
+  
+  "homeRecentScans": "Recent Scans",
+  "@homeRecentScans": {
+    "description": "Section title for recent scans"
+  },
+  
+  "homeViewAll": "View All",
+  "@homeViewAll": {
+    "description": "Link to view all scans"
+  },
+  
+  "homeTryDemo": "Try Demo",
+  "@homeTryDemo": {
+    "description": "Demo button for judges"
+  },
+  
+  "homeDemoSubtitle": "See Dosely in action",
+  "@homeDemoSubtitle": {
+    "description": "Demo button subtitle"
+  },
+
+  "readAloud": "Read Aloud",
+  "@readAloud": {
+    "description": "TTS button text"
+  },
+
+  "statusSafe": "Safe",
+  "@statusSafe": {
+    "description": "Medication status: safe"
+  },
+  
+  "statusCaution": "Caution",
+  "@statusCaution": {
+    "description": "Medication status: caution"
+  },
+  
+  "statusConflict": "Conflict",
+  "@statusConflict": {
+    "description": "Medication status: conflict"
+  },
+
+  "profileTitle": "My Profile",
+  "@profileTitle": {
+    "description": "Profile screen title"
+  },
+  
+  "profileAge": "Age",
+  "@profileAge": {
+    "description": "Profile: age label"
+  },
+  
+  "profileSex": "Sex",
+  "@profileSex": {
+    "description": "Profile: sex label"
+  },
+  
+  "profilePregnancy": "Pregnancy Status",
+  "@profilePregnancy": {
+    "description": "Profile: pregnancy status label"
+  },
+  
+  "profileNotPregnant": "Not Pregnant",
+  "@profileNotPregnant": {
+    "description": "Profile: not pregnant option"
+  },
+  
+  "profileMedicalProfile": "Medical Profile",
+  "@profileMedicalProfile": {
+    "description": "Profile section title"
+  },
+  
+  "profileAllergies": "Allergies",
+  "@profileAllergies": {
+    "description": "Allergies section label"
+  },
+  
+  "profileConditions": "Conditions",
+  "@profileConditions": {
+    "description": "Medical conditions section label"
+  },
+  
+  "profileEditFull": "Edit Full Profile",
+  "@profileEditFull": {
+    "description": "Edit profile button"
+  },
+  
+  "profileEdit": "Edit",
+  "@profileEdit": {
+    "description": "Generic edit button"
+  },
+
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Language setting label"
+  },
+  
+  "settingsTextSize": "Text Size",
+  "@settingsTextSize": {
+    "description": "Text size setting label"
+  },
+  
+  "settingsTextNormal": "Normal",
+  "@settingsTextNormal": {
+    "description": "Text size: normal"
+  },
+  
+  "settingsTextLarge": "Large",
+  "@settingsTextLarge": {
+    "description": "Text size: large"
+  },
+  
+  "settingsTextExtraLarge": "Extra Large",
+  "@settingsTextExtraLarge": {
+    "description": "Text size: extra large"
+  },
+  
+  "settingsVoice": "Voice Settings",
+  "@settingsVoice": {
+    "description": "Voice settings section"
+  },
+  
+  "settingsVoiceSlow": "Slow",
+  "@settingsVoiceSlow": {
+    "description": "Voice speed: slow"
+  },
+  
+  "settingsVoiceNormal": "Normal",
+  "@settingsVoiceNormal": {
+    "description": "Voice speed: normal"
+  },
+  
+  "settingsVoiceFast": "Fast",
+  "@settingsVoiceFast": {
+    "description": "Voice speed: fast"
+  },
+  
+  "settingsTestVoice": "Test Voice",
+  "@settingsTestVoice": {
+    "description": "Button to test TTS"
+  },
+  
+  "settingsSimpleMode": "Simple Language Mode",
+  "@settingsSimpleMode": {
+    "description": "Simple language toggle"
+  },
+  
+  "settingsSimpleModeSubtitle": "Explain like I'm 12",
+  "@settingsSimpleModeSubtitle": {
+    "description": "Simple mode explanation"
+  },
+  
+  "settingsClearHistory": "Clear Scan History",
+  "@settingsClearHistory": {
+    "description": "Button to clear history"
+  },
+  
+  "settingsAbout": "About Dosely",
+  "@settingsAbout": {
+    "description": "About link"
+  },
+  
+  "settingsDisclaimer": "Disclaimer & Data Sources",
+  "@settingsDisclaimer": {
+    "description": "Disclaimer link"
+  },
+  
+  "settingsPrivacy": "Privacy Policy",
+  "@settingsPrivacy": {
+    "description": "Privacy policy link"
+  },
+
+  "medsTitle": "My Medications",
+  "@medsTitle": {
+    "description": "Medication list screen title"
+  },
+  
+  "medsActive": "Active Medications",
+  "@medsActive": {
+    "description": "Active medications section"
+  },
+  
+  "medsExport": "Export Summary (PDF)",
+  "@medsExport": {
+    "description": "Export button"
+  },
+  
+  "medsShare": "Share with Caregiver",
+  "@medsShare": {
+    "description": "Share button"
+  },
+  
+  "medsLastScan": "Last scan",
+  "@medsLastScan": {
+    "description": "Last scan label"
+  },
+  
+  "medsToday": "Today",
+  "@medsToday": {
+    "description": "Today label"
+  },
+  
+  "medsYesterday": "Yesterday",
+  "@medsYesterday": {
+    "description": "Yesterday label"
+  },
+  
+  "medsDaysAgo": "{days} days ago",
+  "@medsDaysAgo": {
+    "description": "Days ago label",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+
+  "scheduleTitle": "Your Plan for Today",
+  "@scheduleTitle": {
+    "description": "Schedule screen title"
+  },
+  
+  "scheduleReview": "Review your scanned medication",
+  "@scheduleReview": {
+    "description": "Schedule subtitle"
+  },
+  
+  "scheduleReadPlan": "Read Plan Aloud",
+  "@scheduleReadPlan": {
+    "description": "TTS button for schedule"
+  },
+  
+  "scheduleDaily": "Daily Schedule",
+  "@scheduleDaily": {
+    "description": "Daily schedule section"
+  },
+  
+  "scheduleMorning": "Morning",
+  "@scheduleMorning": {
+    "description": "Morning time slot"
+  },
+  
+  "scheduleMidday": "Midday",
+  "@scheduleMidday": {
+    "description": "Midday time slot"
+  },
+  
+  "scheduleEvening": "Evening",
+  "@scheduleEvening": {
+    "description": "Evening time slot"
+  },
+  
+  "scheduleNight": "Night",
+  "@scheduleNight": {
+    "description": "Night time slot"
+  },
+  
+  "scheduleNoMeds": "No medications scheduled",
+  "@scheduleNoMeds": {
+    "description": "Empty time slot message"
+  },
+  
+  "scheduleTablet": "tablet",
+  "@scheduleTablet": {
+    "description": "Tablet form"
+  },
+  
+  "scheduleWithFood": "With food",
+  "@scheduleWithFood": {
+    "description": "Take with food instruction"
+  },
+  
+  "scheduleAddAnother": "Add Another Medication",
+  "@scheduleAddAnother": {
+    "description": "Add medication button"
+  },
+  
+  "scheduleHighConfidence": "High Confidence",
+  "@scheduleHighConfidence": {
+    "description": "Confidence level: high"
+  },
+  
+  "scheduleMediumConfidence": "Medium Confidence",
+  "@scheduleMediumConfidence": {
+    "description": "Confidence level: medium"
+  },
+  
+  "scheduleLowConfidence": "Low Confidence",
+  "@scheduleLowConfidence": {
+    "description": "Confidence level: low"
+  },
+
+  "conflictTitle": "Possible duplicate ingredient",
+  "@conflictTitle": {
+    "description": "Conflict alert title"
+  },
+  
+  "conflictDescription": "You are already taking {ingredient} in another medication. This may exceed safe daily limits.",
+  "@conflictDescription": {
+    "description": "Conflict description with ingredient",
+    "placeholders": {
+      "ingredient": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "conflictViewDetails": "View Details",
+  "@conflictViewDetails": {
+    "description": "View conflict details button"
+  },
+
+  "sideEffectsTitle": "Side Effects",
+  "@sideEffectsTitle": {
+    "description": "Side effects screen title"
+  },
+  
+  "sideEffectsCommon": "Common Side Effects",
+  "@sideEffectsCommon": {
+    "description": "Common side effects tab"
+  },
+  
+  "sideEffectsSerious": "Serious",
+  "@sideEffectsSerious": {
+    "description": "Serious side effects tab"
+  },
+  
+  "sideEffectsHelp": "Get Help",
+  "@sideEffectsHelp": {
+    "description": "Get help tab"
+  },
+  
+  "sideEffectsVeryCommon": "Very Common",
+  "@sideEffectsVeryCommon": {
+    "description": "Frequency: very common"
+  },
+  
+  "sideEffectsOccasional": "Occasional",
+  "@sideEffectsOccasional": {
+    "description": "Frequency: occasional"
+  },
+  
+  "sideEffectsCallPharmacist": "Call Pharmacist",
+  "@sideEffectsCallPharmacist": {
+    "description": "Call pharmacist button"
+  },
+  
+  "sideEffectsEmergency": "Emergency Guidance",
+  "@sideEffectsEmergency": {
+    "description": "Emergency button"
+  },
+
+  "disclaimerTitle": "Important",
+  "@disclaimerTitle": {
+    "description": "Disclaimer title"
+  },
+  
+  "disclaimerText": "Dosely is an information assistant. We are NOT providing medical advice. Always consult your doctor or pharmacist before making medication decisions.",
+  "@disclaimerText": {
+    "description": "Safety disclaimer"
+  },
+  
+  "disclaimerAgree": "I Understand",
+  "@disclaimerAgree": {
+    "description": "Disclaimer accept button"
+  },
+
+  "onboardingWelcome": "Welcome to Dosely",
+  "@onboardingWelcome": {
+    "description": "Onboarding welcome"
+  },
+  
+  "onboardingChooseLanguage": "Choose your language",
+  "@onboardingChooseLanguage": {
+    "description": "Language selection prompt"
+  },
+  
+  "onboardingChooseTextSize": "Choose text size",
+  "@onboardingChooseTextSize": {
+    "description": "Text size selection prompt"
+  },
+  
+  "onboardingContinue": "Continue",
+  "@onboardingContinue": {
+    "description": "Continue button"
+  },
+  
+  "onboardingSkip": "Skip",
+  "@onboardingSkip": {
+    "description": "Skip button"
+  },
+  
+  "onboardingGetStarted": "Get Started",
+  "@onboardingGetStarted": {
+    "description": "Final onboarding button"
+  }
+}
