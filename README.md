@@ -1,4 +1,4 @@
-# 💊 Dosely
+# Dosely
 
 > **An accessibility-first mobile app that turns confusing medication labels into clear, personalized, and spoken dosing plans to help people take their medicine safely.**
 
@@ -8,43 +8,43 @@
 
 ---
 
-## 🎯 What is Dosely?
+## What is Dosely?
 
 Dosely is a **hackathon project** designed to help people understand their medications safely. Simply scan a medication label or search by name, and Dosely will:
 
-- ✅ **Extract & Verify** medication info using OCR + Gumloop web search
-- ✅ **Analyze for Conflicts** with your existing medications and health profile
-- ✅ **Generate Personalized Guidance** based on your allergies & conditions
-- ✅ **Read Everything Aloud** with AI-powered voice synthesis
-- ✅ **Translate to Any Language** on-the-fly with AI
+- **Extract & Verify** medication info using OCR + Gumloop web search
+- **Analyze for Conflicts** with your existing medications and health profile
+- **Generate Personalized Guidance** based on your allergies & conditions
+- **Read Everything Aloud** with AI-powered voice synthesis
+- **Translate to Any Language** on-the-fly with AI
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 🔍 Smart Scanning Pipeline
+### Smart Scanning Pipeline
 1. **OCR** - Extracts text from medication labels
 2. **Gumloop Verification** - Double-checks via Google search
 3. **AI Analysis** - Deep research on drug interactions, side effects, and personalized risks
 
-### 🗣️ Accessibility First
+### Accessibility First
 - **Text-to-Speech** with ElevenLabs (choice of 3 voices)
 - **Adjustable Text Size** (Normal, Large, Extra Large)
 - **Colorblind Modes** (Deuteranopia, Protanopia, Tritanopia)
 - **Simple Mode** - "Explain Like I'm 12" for easy understanding
 
-### 🌍 Universal Language Support
+### Universal Language Support
 - Built-in English & French
 - **Any Language** - Type "German", "Japanese", etc. and the entire app translates via AI
 
-### 📋 Medication Management
+### Medication Management
 - Drug interaction detection (Safe / Caution / Conflict)
 - Daily schedule with "Next Dose" countdown
 - Personalized risk warnings based on your profile
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -57,7 +57,7 @@ Dosely is a **hackathon project** designed to help people understand their medic
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Flutter SDK 3.7+
@@ -94,7 +94,7 @@ Dosely is a **hackathon project** designed to help people understand their medic
 
 ---
 
-## 📱 Screenshots
+## Screenshots
 
 | Home | Scan Result | Schedule |
 |------|-------------|----------|
@@ -106,7 +106,7 @@ Dosely is a **hackathon project** designed to help people understand their medic
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 lib/
@@ -127,7 +127,7 @@ lib/
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 Create a `.env` file in the project root:
 
@@ -139,7 +139,7 @@ GUMLOOP_API_KEY=your_gumloop_api_key
 
 ---
 
-## 🎨 Design System
+## Design System
 
 | Color | Hex | Usage |
 |-------|-----|-------|
@@ -152,13 +152,13 @@ GUMLOOP_API_KEY=your_gumloop_api_key
 
 ---
 
-## 👥 Team
+## Team
 
-Built with ❤️ for the **24-hour hackathon**
+Built for the **24-hour hackathon**
 
 ---
 
-## 📄 License
+## License
 
 This project was created for educational and demonstration purposes during a hackathon.
 
