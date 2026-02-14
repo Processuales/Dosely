@@ -1,4 +1,4 @@
-# Dosely
+# Dosely (Hackathon Project)
 
 > **An accessibility-first mobile app that turns confusing medication labels into clear, personalized, and spoken dosing plans to help people take their medicine safely.**
 
